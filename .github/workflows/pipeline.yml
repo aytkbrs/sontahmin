@@ -1,0 +1,36 @@
+name: Daily Coupon Pipeline
+
+on:
+  schedule:
+    # 08:00, 12:00, 17:00 Turkey time (UTC+3) = 05:00, 09:00, 14:00 UTC
+    - cron: "0 5 * * *"
+    - cron: "0 9 * * *"
+    - cron: "0 14 * * *"
+  workflow_dispatch: {}   # allow manual trigger from GitHub UI
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run pipeline
+        run: python scripts/generate_coupons.py
+
+      - name: Commit updated coupons
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/coupons_today.json
+          git diff --cached --quiet || git commit -m "chore: kupon güncelleme $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push

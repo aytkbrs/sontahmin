@@ -1,0 +1,8 @@
+[project]
+name = "iddaa-ingest"
+version = "0.1.0"
+description = "Daily iddaa live football bulletin ingest"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
