@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-07T15:54:25+03:00",
-  "last_checked": "2026-06-07T15:54:25+03:00",
+  "generated_at": "2026-06-07T17:08:32+03:00",
+  "last_checked": "2026-06-07T17:08:32+03:00",
   "date": "2026-06-07",
-  "run_id": 16,
-  "total_events": 192,
-  "events_with_stats": 143,
+  "run_id": 18,
+  "total_events": 183,
+  "events_with_stats": 134,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 5.04,
-      "win_prob": 0.3004,
-      "expected_value": 0.514,
+      "combined_odd": 5.73,
+      "win_prob": 0.2804,
+      "expected_value": 0.606,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -24,18 +24,6 @@
           "drift": 0.0,
           "match_time": "23:30",
           "match_datetime": "2026-06-07T23:30+03:00"
-        },
-        {
-          "event_id": 2920451,
-          "home": "Ranheim",
-          "away": "Strommen",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.32,
-          "fair_prob": 0.6709,
-          "drift": 0.0,
-          "match_time": "18:00",
-          "match_datetime": "2026-06-07T18:00+03:00"
         },
         {
           "event_id": 2992013,
@@ -48,39 +36,51 @@
           "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
+        },
+        {
+          "event_id": 2988188,
+          "home": "Estonya U21",
+          "away": "Litvanya U21",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.5,
+          "fair_prob": 0.6264,
+          "drift": 0.0,
+          "match_time": "18:00",
+          "match_datetime": "2026-06-07T18:00+03:00"
         }
       ]
     },
     {
       "rank": 2,
-      "combined_odd": 3.76,
-      "win_prob": 0.2958,
-      "expected_value": 0.113,
+      "combined_odd": 5.31,
+      "win_prob": 0.275,
+      "expected_value": 0.46,
       "drift_bonus": 0.0,
       "legs": [
         {
-          "event_id": 2918705,
-          "home": "Tucuman",
-          "away": "Quilmes Atletico Club",
+          "event_id": 2918534,
+          "home": "Deportivo Moron",
+          "away": "Club Almirante Brown",
           "outcome_key": "under",
           "outcome_label": "ALT 2.5",
-          "odd": 1.9,
-          "fair_prob": 0.7037,
+          "odd": 1.76,
+          "fair_prob": 0.6902,
           "drift": 0.0,
-          "match_time": "23:30",
-          "match_datetime": "2026-06-07T23:30+03:00"
+          "match_time": "21:00",
+          "match_datetime": "2026-06-07T21:00+03:00"
         },
         {
-          "event_id": 2920451,
-          "home": "Ranheim",
-          "away": "Strommen",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.32,
-          "fair_prob": 0.6709,
+          "event_id": 2992013,
+          "home": "Racing Athletique DU Casablanca",
+          "away": "Club Jeunesse Ben Guerir",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 2.01,
+          "fair_prob": 0.6361,
           "drift": 0.0,
-          "match_time": "18:00",
-          "match_datetime": "2026-06-07T18:00+03:00"
+          "match_time": "19:00",
+          "match_datetime": "2026-06-07T19:00+03:00"
         },
         {
           "event_id": 2988188,
@@ -98,54 +98,9 @@
     },
     {
       "rank": 3,
-      "combined_odd": 4.59,
-      "win_prob": 0.2946,
-      "expected_value": 0.352,
-      "drift_bonus": 0.0,
-      "legs": [
-        {
-          "event_id": 2918534,
-          "home": "Deportivo Moron",
-          "away": "Club Almirante Brown",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.73,
-          "fair_prob": 0.6902,
-          "drift": 0.0,
-          "match_time": "21:00",
-          "match_datetime": "2026-06-07T21:00+03:00"
-        },
-        {
-          "event_id": 2920451,
-          "home": "Ranheim",
-          "away": "Strommen",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.32,
-          "fair_prob": 0.6709,
-          "drift": 0.0,
-          "match_time": "18:00",
-          "match_datetime": "2026-06-07T18:00+03:00"
-        },
-        {
-          "event_id": 2992013,
-          "home": "Racing Athletique DU Casablanca",
-          "away": "Club Jeunesse Ben Guerir",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 2.01,
-          "fair_prob": 0.6361,
-          "drift": 0.0,
-          "match_time": "19:00",
-          "match_datetime": "2026-06-07T19:00+03:00"
-        }
-      ]
-    },
-    {
-      "rank": 4,
-      "combined_odd": 5.44,
-      "win_prob": 0.2946,
-      "expected_value": 0.602,
+      "combined_odd": 6.18,
+      "win_prob": 0.275,
+      "expected_value": 0.7,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -161,18 +116,6 @@
           "match_datetime": "2026-06-07T22:00+03:00"
         },
         {
-          "event_id": 2920451,
-          "home": "Ranheim",
-          "away": "Strommen",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.32,
-          "fair_prob": 0.6709,
-          "drift": 0.0,
-          "match_time": "18:00",
-          "match_datetime": "2026-06-07T18:00+03:00"
-        },
-        {
           "event_id": 2992013,
           "home": "Racing Athletique DU Casablanca",
           "away": "Club Jeunesse Ben Guerir",
@@ -183,14 +126,26 @@
           "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
+        },
+        {
+          "event_id": 2988188,
+          "home": "Estonya U21",
+          "away": "Litvanya U21",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.5,
+          "fair_prob": 0.6264,
+          "drift": 0.0,
+          "match_time": "18:00",
+          "match_datetime": "2026-06-07T18:00+03:00"
         }
       ]
     },
     {
-      "rank": 5,
-      "combined_odd": 4.87,
-      "win_prob": 0.294,
-      "expected_value": 0.431,
+      "rank": 4,
+      "combined_odd": 5.53,
+      "win_prob": 0.2745,
+      "expected_value": 0.518,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -206,13 +161,13 @@
           "match_datetime": "2026-06-07T23:30+03:00"
         },
         {
-          "event_id": 2920451,
-          "home": "Ranheim",
-          "away": "Strommen",
+          "event_id": 2988188,
+          "home": "Estonya U21",
+          "away": "Litvanya U21",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.32,
-          "fair_prob": 0.6709,
+          "odd": 1.5,
+          "fair_prob": 0.6264,
           "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
@@ -230,10 +185,55 @@
           "match_datetime": "2026-06-07T19:00+03:00"
         }
       ]
+    },
+    {
+      "rank": 5,
+      "combined_odd": 5.69,
+      "win_prob": 0.2711,
+      "expected_value": 0.543,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2918705,
+          "home": "Tucuman",
+          "away": "Quilmes Atletico Club",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.9,
+          "fair_prob": 0.7037,
+          "drift": 0.0,
+          "match_time": "23:30",
+          "match_datetime": "2026-06-07T23:30+03:00"
+        },
+        {
+          "event_id": 2992013,
+          "home": "Racing Athletique DU Casablanca",
+          "away": "Club Jeunesse Ben Guerir",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 2.01,
+          "fair_prob": 0.6361,
+          "drift": 0.0,
+          "match_time": "19:00",
+          "match_datetime": "2026-06-07T19:00+03:00"
+        },
+        {
+          "event_id": 2920597,
+          "home": "Huachipato",
+          "away": "Colo Colo",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.49,
+          "fair_prob": 0.6057,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        }
+      ]
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 7,
+    "total_prematch_runs": 8,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
