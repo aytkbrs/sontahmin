@@ -1,14 +1,17 @@
 {
-  "generated_at": "2026-06-07T14:54:46+03:00",
-  "last_checked": "2026-06-07T14:54:46+03:00",
+  "generated_at": "2026-06-07T15:12:26+03:00",
+  "last_checked": "2026-06-07T15:12:26+03:00",
   "date": "2026-06-07",
-  "run_id": 10,
-  "total_events": 195,
-  "events_with_stats": 146,
+  "run_id": 12,
+  "total_events": 191,
+  "events_with_stats": 142,
   "coupons": [],
   "accumulation": {
-    "total_prematch_runs": 4,
+    "total_prematch_runs": 5,
     "total_result_labels": 0,
-    "total_training_rows": 0
+    "total_training_rows": 0,
+    "pinnacle_covered_today": 0,
+    "tracked_teams": 0,
+    "team_match_history": 0
   }
 }
