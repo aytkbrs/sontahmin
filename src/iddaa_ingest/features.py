@@ -40,6 +40,9 @@ def _implied_prob(odd: float | None) -> float | None:
 def _find_market(event: dict, *, market_type: int, market_subtype: int) -> dict | None:
     for market in event.get("m", []):
         if market.get("t") == market_type and market.get("st") == market_subtype:
+            # s=1 → açık; s=-2 veya başka değer → kapalı/askıya alınmış
+            if market.get("s", 1) != 1:
+                return None
             return market
     return None
 

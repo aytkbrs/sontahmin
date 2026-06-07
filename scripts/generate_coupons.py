@@ -49,6 +49,13 @@ OUTPUT = ROOT / "output" / "coupons_today.json"
 STATS_DELAY = 0.35
 TOP_COUPONS = 5
 
+# Outcome key → (market_type, market_subtype) iddaa API değerleri
+_OUTCOME_MARKET = {
+    "home": (1, 1), "draw": (1, 1), "away": (1, 1),
+    "over": (2, 101), "under": (2, 101),
+    "btts_yes": (2, 89), "btts_no": (2, 89),
+}
+
 
 @dataclass
 class _StatsSnap:
@@ -375,6 +382,31 @@ def run() -> None:
     # 4 — Coupons (only open markets, today's matches)
     print(f"[4/5] Bugün ({today}) için kupon üretiliyor...")
     coupons = build_coupons(edges, top_n=TOP_COUPONS, date_filter=today)
+
+    # 4.5 — Market re-validasyonu: bu run'daki snapshot'ta status=1 olmayan marketleri içeren kuponları çıkar
+    with connect(DB_PATH) as _vconn:
+        valid_coupons = []
+        for coupon in coupons:
+            ok = True
+            for leg in coupon.legs:
+                mtype, msub = _OUTCOME_MARKET.get(leg.outcome, (None, None))
+                if mtype is None:
+                    continue
+                row = _vconn.execute(
+                    "SELECT status FROM market_snapshots WHERE run_id=? AND event_id=? AND market_type=? AND market_subtype=? LIMIT 1",
+                    (run_id, leg.event_id, mtype, msub),
+                ).fetchone()
+                if row is not None and row["status"] != 1:
+                    ok = False
+                    print(f"      [filtre] Kapalı market atlandı: event={leg.event_id} {leg.outcome} status={row['status']}")
+                    break
+            if ok:
+                valid_coupons.append(coupon)
+    removed = len(coupons) - len(valid_coupons)
+    if removed:
+        print(f"      {removed} kupon kapalı market içerdiği için çıkarıldı")
+    coupons = valid_coupons
+
     with connect(DB_PATH) as conn:
         save_coupon_candidates(conn, run_id, coupons)
     print(f"      {len(coupons)} kupon üretildi")

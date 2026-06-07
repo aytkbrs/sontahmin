@@ -229,6 +229,16 @@ This file must be updated after every meaningful project change.
 
 ## Change Log
 
+- 2026-06-07 (kapalı market filtresi — 2 katmanlı çözüm):
+  - **Sorun tespiti**: iddaa API'sinde market `s` alanı: `s=1` = açık, `s=-2` = kapalı/askıda
+  - `features.py` → `_find_market`: `s != 1` olan marketler artık `None` döner (ingest sırasında DB'ye geçersiz oran gitmez)
+  - `generate_coupons.py` → Kupon yazılmadan önce **canlı re-validasyon** adımı eklendi:
+    - Her kupon ayağının market durumu `market_snapshots.status` tablosundan sorgulanır (aynı `run_id`)
+    - `status != 1` olan market içeren kuponlar çıkarılır ve loglanır
+    - Bu, bülten çekildikten sonra kapanan marketleri de yakalar (saatlik güncelleme sıklığı içinde)
+  - `streamlit_app.py` → footer "Günde 3 kez güncellenir" → "Saatte 1 kez güncellenir · Kapalı marketler otomatik filtredir"
+  - `_OUTCOME_MARKET` sabit dict: outcome_key → (market_type, market_subtype) eşlemesi
+
 - 2026-06-07 (takım profil sistemi):
   - `src/iddaa_ingest/team_profiles.py` oluşturuldu:
     - `teams` + `team_match_results` tabloları (DB'de birikimli takım geçmişi)

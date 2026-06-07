@@ -169,5 +169,5 @@ st.divider()
 st.caption(
     "Veri kaynağı: iddaa.com · "
     "Model: Dixon-Coles Poisson · "
-    "Günde 3 kez güncellenir (08:00 / 12:00 / 17:00 Türkiye saati)"
+    "Saatte 1 kez güncellenir · Kapalı marketler otomatik filtredir"
 )
