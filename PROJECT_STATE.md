@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-06-07 (model stack added)
+Last updated: 2026-06-07 (saatlik diff pipeline + kapalı piyasa filtresi)
 
 ## Goal
 Build an iddaa prediction system with strong project continuity between sessions.
@@ -228,6 +228,27 @@ This file must be updated after every meaningful project change.
 - Add the first coupon-construction research layer on top of the stored bulletin-only dataset
 
 ## Change Log
+
+- 2026-06-07 (saatlik diff pipeline + kapalı piyasa filtresi):
+  - **HATA DÜZELTMESİ**: `features.py` market status kontrolü eklendi
+    - `_find_market` artık `market.get("s", 0) != 0` ise None döndürüyor
+    - Kapalı/askıya alınmış piyasalar (iddaa'da "kapalı" görünen oranlar) artık filtreleniyor
+    - Etkilenen tablolar: `event_feature_snapshots` (home_odd/draw_odd/away_odd/ou25/btts)
+  - **Version-diff tabanlı ingest** (`ingest.py`):
+    - Bülten API'si `version` (ms cinsinden timestamp) döndürür; önceki run ile aynıysa yeni run yazılmaz
+    - `IngestResult.changed: bool` eklendi — pipeline bu flag'e göre karar verir
+    - Değişmeyen bültende DB'ye yeni satır eklenmez → DB gereksiz şişmez
+  - **Saatlik Actions** (`.github/workflows/pipeline.yml`):
+    - Günde 3x → saatte 1x değiştirildi (`0 * * * *`)
+    - Bülten değişmediyse pipeline sadece zaman damgasını günceller (~5 saniye)
+    - Bülten değiştiyse tam pipeline çalışır (~3 dakika)
+  - **`generate_coupons.py`** akıllı diff mantığı:
+    - `need_full_pipeline = ingest_result.changed or new_day`
+    - Değişmediğinde: `last_checked` güncellenir, live skor çekilir, stats/scoring/kupon atlanır
+    - Her durumda: live skor + label + training çalışır
+  - **Streamlit**: `last_checked` timestamp eklendi ("Kupon üretildi: HH:MM · Son kontrol: HH:MM")
+  - **DB migration**: `coupon_results` tablosu eklendi (ileride kupon takibi için)
+
 - 2026-06-07 (Poisson model + statistics API):
   - Discovered `statisticsv2.iddaa.com` — provides per-event card-corners data with last 6 matches for both teams
   - Created `stats.py`: form feature extraction from card-corners API

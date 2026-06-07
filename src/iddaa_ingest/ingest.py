@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .client import IddaaClient
 from .config import (
@@ -37,6 +37,7 @@ class IngestResult:
     feature_count: int
     score_count: int
     db_path: str
+    changed: bool = True   # False when bulletin version matched last run → nothing written
 
 
 def _persist_events(conn: sqlite3.Connection, run_id: int, events: list[dict]) -> tuple[int, int, int]:
@@ -74,6 +75,28 @@ def ingest_football_bulletin(bulletin_type: int, db_path=DB_PATH) -> IngestResul
 
     with connect(db_path) as conn:
         init_db(conn)
+
+        # Diff check: if the bulletin version hasn't changed, skip writing a new run.
+        # iddaa updates `version` (a ms-timestamp) whenever any odds change.
+        if version is not None:
+            last = conn.execute(
+                "SELECT id, version, event_count FROM ingest_runs "
+                "WHERE bulletin_type = ? ORDER BY id DESC LIMIT 1",
+                (bulletin_type,),
+            ).fetchone()
+            if last and last["version"] == version:
+                return IngestResult(
+                    run_id=last["id"],
+                    bulletin_type=bulletin_type,
+                    event_count=last["event_count"],
+                    market_count=0,
+                    outcome_count=0,
+                    feature_count=0,
+                    score_count=0,
+                    db_path=str(db_path),
+                    changed=False,
+                )
+
         upsert_competitions(conn, competitions_payload.get("data", []))
 
         run_id = insert_run(
@@ -100,6 +123,7 @@ def ingest_football_bulletin(bulletin_type: int, db_path=DB_PATH) -> IngestResul
         feature_count=feature_count,
         score_count=0,
         db_path=str(db_path),
+        changed=True,
     )
 
 
@@ -146,4 +170,5 @@ def ingest_live_scoreboard(db_path=DB_PATH) -> IngestResult:
         feature_count=0,
         score_count=len(events),
         db_path=str(db_path),
+        changed=True,
     )

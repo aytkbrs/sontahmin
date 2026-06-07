@@ -31,6 +31,7 @@ if data is None:
 
 date_str = data.get("date", "?")
 generated_at = data.get("generated_at", "?")
+last_checked = data.get("last_checked", generated_at)
 total_events = data.get("total_events", 0)
 events_with_stats = data.get("events_with_stats", 0)
 coupons = data.get("coupons", [])
@@ -41,6 +42,12 @@ try:
 except Exception:
     generated_label = generated_at
 
+try:
+    dt_checked = datetime.datetime.fromisoformat(last_checked)
+    checked_label = dt_checked.strftime("%H:%M")
+except Exception:
+    checked_label = last_checked
+
 accumulation = data.get("accumulation", {})
 total_runs = accumulation.get("total_prematch_runs", 0)
 total_labels = accumulation.get("total_result_labels", 0)
@@ -48,9 +55,10 @@ total_training = accumulation.get("total_training_rows", 0)
 
 st.markdown(f"### 📅 {date_str}")
 st.caption(
-    f"Son güncelleme: **{generated_label}** · "
-    f"{total_events} maç bülteni · "
-    f"{events_with_stats} maç form verisi"
+    f"Kupon üretildi: **{generated_label}** · "
+    f"Son kontrol: **{checked_label}** · "
+    f"{total_events} maç · "
+    f"{events_with_stats} form verisi"
 )
 
 col_a, col_b, col_c = st.columns(3)

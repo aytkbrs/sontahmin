@@ -1,12 +1,11 @@
-"""Pipeline script — runs daily via GitHub Actions.
+"""Pipeline script — runs hourly via GitHub Actions.
 
-Fetches prematch bulletin, form statistics, computes Poisson-based edge
-scores (with odds drift from previous run), builds today's 3-leg coupons,
-captures live scores (settled matches), generates result labels and training
-rows, then writes output/coupons_today.json for the Streamlit frontend.
+Akıllı diff mantığı:
+  - iddaa bülteni değişmediyse (version aynı) → stats/scoring/kupon atlanır,
+    sadece live skor + etiket toplama yapılır, JSON'da zaman damgası güncellenir
+  - Yeni gün başladıysa veya bülten değiştiyse → tam pipeline çalışır
 
-Over time the DB accumulates: every day adds bulletin snapshots, settled
-labels, and training rows — the model can then be calibrated with real data.
+Bu sayede DB gereksiz büyümez, API'ye boşu boşuna istek gitmez.
 """
 
 from __future__ import annotations
@@ -106,19 +105,87 @@ def _leg_to_dict(leg) -> dict:
     }
 
 
+def _fetch_live_and_label() -> tuple[int, int, int]:
+    """Canlı skor çek, biten maçları etiketle, training satırı üret."""
+    try:
+        live_result = ingest_live_scoreboard()
+        with connect(DB_PATH) as conn:
+            init_db(conn)
+            labels = generate_result_labels(conn)
+            training = build_prematch_training_dataset(conn)
+        return live_result.event_count, labels, training
+    except Exception as exc:
+        print(f"      [uyarı] live skor hatası: {exc}")
+        return 0, 0, 0
+
+
+def _accumulation_stats() -> dict:
+    with connect(DB_PATH) as conn:
+        total_runs = conn.execute(
+            "SELECT COUNT(*) FROM ingest_runs WHERE bulletin_type=0"
+        ).fetchone()[0]
+        total_labels = conn.execute(
+            "SELECT COUNT(*) FROM event_result_labels"
+        ).fetchone()[0]
+        total_training = conn.execute(
+            "SELECT COUNT(*) FROM training_dataset_prematch"
+        ).fetchone()[0]
+    return {
+        "total_prematch_runs": total_runs,
+        "total_result_labels": total_labels,
+        "total_training_rows": total_training,
+    }
+
+
 def run() -> None:
     today = datetime.datetime.now(TZ).strftime("%Y-%m-%d")
     now_str = datetime.datetime.now(TZ).isoformat(timespec="seconds")
     print(f"\n=== iddaa Pipeline {now_str} ===\n")
 
-    # 1 — Prematch bulletin
-    print("[1/5] Prematch bülteni çekiliyor...")
+    # 1 — Prematch bulletin (diff check built in)
+    print("[1/?] Prematch bülteni kontrol ediliyor...")
     ingest_result = ingest_prematch_football()
     run_id = ingest_result.run_id
-    print(f"      run_id={run_id}  events={ingest_result.event_count}")
 
-    # 2 — Form statistics (Poisson model inputs)
-    print(f"[2/5] Form istatistikleri çekiliyor ({ingest_result.event_count} maç)...")
+    if ingest_result.changed:
+        print(f"      DEĞİŞTİ → run_id={run_id}  events={ingest_result.event_count}")
+    else:
+        print(f"      DEĞİŞMEDİ → run_id={run_id} (mevcut)")
+
+    # Determine whether full pipeline is needed
+    existing_json: dict | None = None
+    if OUTPUT.exists():
+        try:
+            with open(OUTPUT, encoding="utf-8") as f:
+                existing_json = json.load(f)
+        except Exception:
+            existing_json = None
+
+    last_json_date = existing_json.get("date", "") if existing_json else ""
+    new_day = (last_json_date != today)
+
+    need_full_pipeline = ingest_result.changed or new_day
+
+    if not need_full_pipeline:
+        # Bulletin unchanged, same day → only update timestamp + live scores
+        print("\nBülten değişmedi, yeni gün yok → sadece skor ve zaman güncelleniyor.")
+        live_count, labels, training = _fetch_live_and_label()
+        print(f"      {live_count} canlı maç · {labels} etiket · {training} training satırı")
+
+        if existing_json:
+            existing_json["last_checked"] = now_str
+            existing_json["accumulation"] = _accumulation_stats()
+            OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+            with open(OUTPUT, "w", encoding="utf-8") as f:
+                json.dump(existing_json, f, ensure_ascii=False, indent=2)
+            print(f"\n✓ Zaman damgası güncellendi: {now_str}")
+        return
+
+    # Full pipeline below
+    print(f"\nTam pipeline çalışıyor (yeni_gün={new_day}, değişti={ingest_result.changed})")
+
+    # 2 — Form statistics
+    print(f"\n[2/5] Form istatistikleri çekiliyor ({ingest_result.event_count} maç)...")
     sc = StatsClient()
     with connect(DB_PATH) as conn:
         init_db(conn)
@@ -128,7 +195,7 @@ def run() -> None:
         ).fetchall()
 
     snaps: list[_StatsSnap] = []
-    for i, ev in enumerate(event_rows):
+    for ev in event_rows:
         eid = ev["event_id"]
         try:
             r = sc.fetch_card_corners(eid)
@@ -174,42 +241,29 @@ def run() -> None:
     with_stats = sum(1 for s in snaps if s.has_data)
     print(f"      {with_stats}/{len(snaps)} maç için istatistik mevcut")
 
-    # 3 — Edge scoring (with odds drift from previous run)
-    print("[3/5] Edge scoring (Poisson model + odds drift)...")
+    # 3 — Edge scoring + odds drift
+    print("[3/5] Edge scoring (Poisson + odds drift)...")
     with connect(DB_PATH) as conn:
         init_db(conn)
         _, edges = score_latest_prematch(conn)
         for edge in edges:
             insert_edge_score(conn, edge)
     drift_count = sum(1 for e in edges if e.drift_home is not None)
-    print(f"      {len(edges)} maç skorlandı · {drift_count} maç için oran kayması hesaplandı")
+    print(f"      {len(edges)} maç · {drift_count} drift hesaplandı")
 
-    # 4 — Build coupons for today
+    # 4 — Coupons (only open markets, today's matches)
     print(f"[4/5] Bugün ({today}) için kupon üretiliyor...")
     coupons = build_coupons(edges, top_n=TOP_COUPONS, date_filter=today)
     with connect(DB_PATH) as conn:
         save_coupon_candidates(conn, run_id, coupons)
     print(f"      {len(coupons)} kupon üretildi")
 
-    # 5 — Live scores: capture settled matches, generate labels, update training data
-    print("[5/5] Canlı skor + maç sonuçları işleniyor...")
-    try:
-        live_result = ingest_live_scoreboard()
-        with connect(DB_PATH) as conn:
-            init_db(conn)
-            labels_count = generate_result_labels(conn)
-            training_count = build_prematch_training_dataset(conn)
-        print(
-            f"      {live_result.event_count} canlı maç · "
-            f"{labels_count} yeni sonuç etiketi · "
-            f"{training_count} training satırı"
-        )
-    except Exception as exc:
-        print(f"      [uyarı] live skor çekme hatası: {exc}")
-        labels_count = 0
-        training_count = 0
+    # 5 — Live scores + labels + training
+    print("[5/5] Canlı skor + maç sonuçları...")
+    live_count, labels, training = _fetch_live_and_label()
+    print(f"      {live_count} canlı maç · {labels} etiket · {training} training satırı")
 
-    # Serialize output
+    # Serialize
     coupon_list = []
     for rank, c in enumerate(coupons, 1):
         coupon_list.append({
@@ -221,41 +275,27 @@ def run() -> None:
             "legs": [_leg_to_dict(lg) for lg in c.legs],
         })
 
-    # Accumulation stats (how much historical data we have)
-    with connect(DB_PATH) as conn:
-        total_runs = conn.execute(
-            "SELECT COUNT(*) FROM ingest_runs WHERE bulletin_type=0"
-        ).fetchone()[0]
-        total_labels = conn.execute(
-            "SELECT COUNT(*) FROM event_result_labels"
-        ).fetchone()[0]
-        total_training = conn.execute(
-            "SELECT COUNT(*) FROM training_dataset_prematch"
-        ).fetchone()[0]
-
     payload = {
         "generated_at": now_str,
+        "last_checked": now_str,
         "date": today,
         "run_id": run_id,
         "total_events": ingest_result.event_count,
         "events_with_stats": with_stats,
         "coupons": coupon_list,
-        "accumulation": {
-            "total_prematch_runs": total_runs,
-            "total_result_labels": total_labels,
-            "total_training_rows": total_training,
-        },
+        "accumulation": _accumulation_stats(),
     }
 
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
+    acc = payload["accumulation"]
     print(f"\n✓ Kaydedildi: {OUTPUT}")
     print(
-        f"✓ Birikim: {total_runs} gün · "
-        f"{total_labels} etiket · "
-        f"{total_training} training satırı"
+        f"✓ Birikim: {acc['total_prematch_runs']} gün · "
+        f"{acc['total_result_labels']} etiket · "
+        f"{acc['total_training_rows']} training satırı"
     )
     print(f"✓ Tamamlandı: {datetime.datetime.now(TZ).isoformat(timespec='seconds')}\n")
 
