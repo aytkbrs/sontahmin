@@ -13,12 +13,16 @@ st.set_page_config(
 DATA_FILE = Path(__file__).parent / "output" / "coupons_today.json"
 
 # ── load data ──────────────────────────────────────────────────────────────
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=60)
 def load_data():
     if not DATA_FILE.exists():
         return None
     with open(DATA_FILE, encoding="utf-8") as f:
         return json.load(f)
+
+col_refresh, _ = st.columns([1, 5])
+if col_refresh.button("↺ Yenile"):
+    load_data.clear()
 
 data = load_data()
 
