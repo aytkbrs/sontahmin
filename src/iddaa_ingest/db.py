@@ -256,6 +256,24 @@ def init_db(conn: sqlite3.Connection) -> None:
             FOREIGN KEY (run_id) REFERENCES ingest_runs(id) ON DELETE CASCADE
         );
 
+        CREATE TABLE IF NOT EXISTS external_odds_snapshots (
+            odds_api_id TEXT NOT NULL,
+            run_id INTEGER NOT NULL,
+            sport_key TEXT NOT NULL,
+            home_team TEXT NOT NULL,
+            away_team TEXT NOT NULL,
+            commence_epoch INTEGER,
+            bookmaker TEXT NOT NULL,
+            home_odd REAL,
+            draw_odd REAL,
+            away_odd REAL,
+            iddaa_event_id INTEGER,
+            match_confidence REAL,
+            fetched_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (odds_api_id, run_id),
+            FOREIGN KEY (run_id) REFERENCES ingest_runs(id) ON DELETE CASCADE
+        );
+
         CREATE TABLE IF NOT EXISTS coupon_results (
             event_id INTEGER NOT NULL,
             run_id INTEGER NOT NULL,
@@ -665,6 +683,30 @@ def save_coupon_candidates(conn: sqlite3.Connection, run_id: int, coupons) -> No
             ?, ?, ?, ?, ?, ?, ?,
             ?, ?, ?, ?
         )
+        """,
+        rows,
+    )
+
+
+def insert_external_odds(conn: sqlite3.Connection, run_id: int, records: list) -> None:
+    """Odds API'den çekilen dış bahisçi oranlarını kaydet."""
+    rows = [
+        (
+            r.odds_api_id, run_id, r.sport_key,
+            r.home_team, r.away_team, r.commence_epoch,
+            r.bookmaker, r.home_odd, r.draw_odd, r.away_odd,
+            r.iddaa_event_id, r.match_confidence,
+        )
+        for r in records
+    ]
+    conn.executemany(
+        """
+        INSERT OR REPLACE INTO external_odds_snapshots (
+            odds_api_id, run_id, sport_key,
+            home_team, away_team, commence_epoch,
+            bookmaker, home_odd, draw_odd, away_odd,
+            iddaa_event_id, match_confidence
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         rows,
     )

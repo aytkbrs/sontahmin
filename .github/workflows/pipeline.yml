@@ -23,6 +23,8 @@ jobs:
         run: pip install requests
 
       - name: Run pipeline
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python scripts/generate_coupons.py
 
       - name: Commit updated data

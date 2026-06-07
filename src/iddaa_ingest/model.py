@@ -255,12 +255,19 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
             ss.lambda_home, ss.lambda_away,
             ss.model_p1, ss.model_px, ss.model_p2,
             ss.model_p_over25, ss.model_p_btts,
-            ss.has_data AS stats_available
+            ss.has_data AS stats_available,
+            ext.home_odd  AS ext_home_odd,
+            ext.draw_odd  AS ext_draw_odd,
+            ext.away_odd  AS ext_away_odd,
+            ext.bookmaker AS ext_bookmaker,
+            ext.match_confidence AS ext_confidence
         FROM event_feature_snapshots fs
         JOIN event_snapshots es
           ON es.run_id = fs.run_id AND es.event_id = fs.event_id
         LEFT JOIN event_stats_snapshots ss
           ON ss.run_id = fs.run_id AND ss.event_id = fs.event_id
+        LEFT JOIN external_odds_snapshots ext
+          ON ext.run_id = fs.run_id AND ext.iddaa_event_id = fs.event_id
         WHERE fs.run_id = ?
           AND fs.has_main_1x2 = 1
         ORDER BY fs.event_id
@@ -271,7 +278,33 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
     edges = []
     for r in rows:
         model_probs = None
-        if r["stats_available"] and r["model_p1"] is not None:
+
+        # Priority 1: Pinnacle / sharp bookmaker odds (most reliable edge signal)
+        ext_h = r["ext_home_odd"]
+        ext_d = r["ext_draw_odd"]
+        ext_a = r["ext_away_odd"]
+        ext_conf = r["ext_confidence"] or 0.0
+        if (
+            ext_h and ext_d and ext_a
+            and ext_h > 1.01 and ext_d > 1.01 and ext_a > 1.01
+            and ext_conf >= 0.72
+        ):
+            ext_ov = 1 / ext_h + 1 / ext_d + 1 / ext_a
+            model_probs = PoissonProbs(
+                lambda_home=None,
+                lambda_away=None,
+                p1=(1 / ext_h) / ext_ov,
+                px=(1 / ext_d) / ext_ov,
+                p2=(1 / ext_a) / ext_ov,
+                # OU/BTTS: fall back to Poisson if available, else None
+                p_over25=r["model_p_over25"] if r["stats_available"] else 0.5,
+                p_under25=1.0 - (r["model_p_over25"] if r["stats_available"] else 0.5),
+                p_btts=r["model_p_btts"] if r["stats_available"] else 0.5,
+                p_no_btts=1.0 - (r["model_p_btts"] if r["stats_available"] else 0.5),
+            )
+
+        # Priority 2: Poisson model (if Pinnacle not available)
+        elif r["stats_available"] and r["model_p1"] is not None:
             model_probs = PoissonProbs(
                 lambda_home=r["lambda_home"],
                 lambda_away=r["lambda_away"],
@@ -283,6 +316,9 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
                 p_btts=r["model_p_btts"],
                 p_no_btts=1.0 - r["model_p_btts"],
             )
+
+        # Priority 3: margin removal only (no model)
+
         pi = prev_implied.get(r["event_id"])
         edges.append(compute_event_edge(run_id, r, model_probs, prev_implied=pi))
     return run_id, edges

@@ -61,10 +61,12 @@ st.caption(
     f"{events_with_stats} form verisi"
 )
 
-col_a, col_b, col_c = st.columns(3)
+pinnacle_covered = accumulation.get("pinnacle_covered_today", 0)
+col_a, col_b, col_c, col_d = st.columns(4)
 col_a.metric("Toplam Gün", total_runs, help="Birikmüş prematch bülteni sayısı")
 col_b.metric("Sonuç Etiketi", total_labels, help="Tamamlanmış ve etiketlenmiş maç sayısı")
 col_c.metric("Training Satırı", total_training, help="Modeli kalibre etmek için kullanılabilir veri")
+col_d.metric("Pinnacle Kapsama", pinnacle_covered, help="Bugün Pinnacle oranı bulunan maç sayısı")
 
 if not coupons:
     st.warning("Bugün için uygun kupon bulunamadı.")

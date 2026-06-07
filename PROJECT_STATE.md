@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-06-07 (saatlik diff pipeline + kapalı piyasa filtresi)
+Last updated: 2026-06-07 (The Odds API Pinnacle entegrasyonu)
 
 ## Goal
 Build an iddaa prediction system with strong project continuity between sessions.
@@ -228,6 +228,25 @@ This file must be updated after every meaningful project change.
 - Add the first coupon-construction research layer on top of the stored bulletin-only dataset
 
 ## Change Log
+
+- 2026-06-07 (The Odds API Pinnacle entegrasyonu):
+  - `src/iddaa_ingest/odds_api.py` oluşturuldu:
+    - 12 büyük lig için Pinnacle (ve diğer keskin bahisçi) oranları çekiliyor
+    - iddaa maçlarıyla takım adı benzerliği (difflib + normalize) + zaman penceresi ile eşleşiyor
+    - Güven skoru (match_confidence ≥ 0.72) ile yanlış eşleşmeler filtreleniyor
+    - 12 lig × 1 kredi = 12 kredi/gün → ~360 kredi/ay (500/ay Starter bütçesi içinde)
+    - ODDS_API_KEY ortam değişkeninden okunuyor; yoksa adım atlanıyor
+  - `db.py`: `external_odds_snapshots` tablosu eklendi + `insert_external_odds` fonksiyonu
+  - `model.py` edge scoring öncelik sırası güncellendi:
+    1. Pinnacle fair probs (match_confidence ≥ 0.72 + valid odds)
+    2. Poisson/Dixon-Coles (Pinnacle yok ama istatistik var)
+    3. Proportional margin removal (ikisi de yoksa)
+  - Pinnacle kullanıldığında: `edge = pinnacle_fair_prob * iddaa_odd - 1` → gerçek misprice tespiti
+  - `generate_coupons.py`: tam pipeline'a `_fetch_external_odds(run_id, event_rows)` adımı eklendi
+  - `pipeline.yml`: `ODDS_API_KEY` GitHub Secret olarak workflow'a enjekte edildi
+  - Streamlit: "Pinnacle Kapsama" metriği eklendi (bugün Pinnacle oranı bulunan maç sayısı)
+  - `poisson.py`: `MatchProbs.lambda_home/away` → `float | None` (Pinnacle path için None OK)
+  - **GitHub Secret kurulumu gerekiyor**: repo → Settings → Secrets → ODDS_API_KEY
 
 - 2026-06-07 (saatlik diff pipeline + kapalı piyasa filtresi):
   - **HATA DÜZELTMESİ**: `features.py` market status kontrolü eklendi

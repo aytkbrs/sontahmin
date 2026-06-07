@@ -26,8 +26,8 @@ MAX_GOALS = 9             # captures >99.9% of probability mass
 
 @dataclass(slots=True)
 class MatchProbs:
-    lambda_home: float
-    lambda_away: float
+    lambda_home: float | None
+    lambda_away: float | None
     p1: float          # home win
     px: float          # draw
     p2: float          # away win

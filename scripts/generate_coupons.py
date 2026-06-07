@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
 import sys
 import time
 from dataclasses import dataclass
@@ -32,6 +33,7 @@ from src.iddaa_ingest.db import (
 )
 from src.iddaa_ingest.ingest import ingest_prematch_football, ingest_live_scoreboard
 from src.iddaa_ingest.labels import generate_result_labels, build_prematch_training_dataset
+from src.iddaa_ingest.db import insert_external_odds
 from src.iddaa_ingest.model import score_latest_prematch
 from src.iddaa_ingest.poisson import compute_match_probs
 from src.iddaa_ingest.stats import extract_match_stats
@@ -105,6 +107,44 @@ def _leg_to_dict(leg) -> dict:
     }
 
 
+def _fetch_external_odds(run_id: int, event_rows: list) -> None:
+    """Pinnacle / keskin bahisçi oranlarını çek ve DB'ye kaydet."""
+    api_key = os.environ.get("ODDS_API_KEY", "")
+    if not api_key:
+        print("      [odds-api] ODDS_API_KEY yok — dış oranlar atlanıyor.")
+        return
+    try:
+        from src.iddaa_ingest.odds_api import fetch_and_match
+        iddaa_events = [
+            {
+                "event_id": r["event_id"],
+                "home_name": r["home_name"],
+                "away_name": r["away_name"],
+                "event_epoch": None,  # epoch sonra join ile bulunabilir
+            }
+            for r in event_rows
+        ]
+        # event_epoch'u ekle
+        with connect(DB_PATH) as conn:
+            for i, r in enumerate(event_rows):
+                ep = conn.execute(
+                    "SELECT event_epoch FROM event_snapshots WHERE run_id=? AND event_id=?",
+                    (run_id, r["event_id"]),
+                ).fetchone()
+                if ep:
+                    iddaa_events[i]["event_epoch"] = ep["event_epoch"]
+
+        records = fetch_and_match(iddaa_events, api_key=api_key)
+        if records:
+            with connect(DB_PATH) as conn:
+                init_db(conn)
+                insert_external_odds(conn, run_id, records)
+            matched = sum(1 for r in records if r.iddaa_event_id is not None)
+            print(f"      [odds-api] {len(records)} maç · {matched} iddaa eşleşmesi · DB'ye kaydedildi")
+    except Exception as exc:
+        print(f"      [odds-api] Hata: {exc}")
+
+
 def _fetch_live_and_label() -> tuple[int, int, int]:
     """Canlı skor çek, biten maçları etiketle, training satırı üret."""
     try:
@@ -120,6 +160,7 @@ def _fetch_live_and_label() -> tuple[int, int, int]:
 
 
 def _accumulation_stats() -> dict:
+    today = datetime.datetime.now(TZ).strftime("%Y-%m-%d")
     with connect(DB_PATH) as conn:
         total_runs = conn.execute(
             "SELECT COUNT(*) FROM ingest_runs WHERE bulletin_type=0"
@@ -130,10 +171,19 @@ def _accumulation_stats() -> dict:
         total_training = conn.execute(
             "SELECT COUNT(*) FROM training_dataset_prematch"
         ).fetchone()[0]
+        pinnacle_covered = conn.execute(
+            """
+            SELECT COUNT(*) FROM external_odds_snapshots
+            WHERE iddaa_event_id IS NOT NULL
+              AND date(fetched_at) = ?
+            """,
+            (today,),
+        ).fetchone()[0]
     return {
         "total_prematch_runs": total_runs,
         "total_result_labels": total_labels,
         "total_training_rows": total_training,
+        "pinnacle_covered_today": pinnacle_covered,
     }
 
 
@@ -240,6 +290,9 @@ def run() -> None:
 
     with_stats = sum(1 for s in snaps if s.has_data)
     print(f"      {with_stats}/{len(snaps)} maç için istatistik mevcut")
+
+    # 2b — External odds (Pinnacle / sharp bookmakers) — günde 1 kez
+    _fetch_external_odds(run_id, event_rows)
 
     # 3 — Edge scoring + odds drift
     print("[3/5] Edge scoring (Poisson + odds drift)...")
