@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-07T15:36:28+03:00",
-  "last_checked": "2026-06-07T15:36:28+03:00",
+  "generated_at": "2026-06-07T15:54:25+03:00",
+  "last_checked": "2026-06-07T15:54:25+03:00",
   "date": "2026-06-07",
-  "run_id": 14,
+  "run_id": 16,
   "total_events": 192,
   "events_with_stats": 143,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 5.08,
+      "combined_odd": 5.04,
       "win_prob": 0.3004,
-      "expected_value": 0.526,
+      "expected_value": 0.514,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -31,7 +31,7 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.33,
+          "odd": 1.32,
           "fair_prob": 0.6709,
           "drift": 0.0,
           "match_time": "18:00",
@@ -53,9 +53,9 @@
     },
     {
       "rank": 2,
-      "combined_odd": 3.79,
+      "combined_odd": 3.76,
       "win_prob": 0.2958,
-      "expected_value": 0.121,
+      "expected_value": 0.113,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -76,7 +76,7 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.33,
+          "odd": 1.32,
           "fair_prob": 0.6709,
           "drift": 0.0,
           "match_time": "18:00",
@@ -98,9 +98,9 @@
     },
     {
       "rank": 3,
-      "combined_odd": 4.62,
+      "combined_odd": 4.59,
       "win_prob": 0.2946,
-      "expected_value": 0.362,
+      "expected_value": 0.352,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -121,7 +121,7 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.33,
+          "odd": 1.32,
           "fair_prob": 0.6709,
           "drift": 0.0,
           "match_time": "18:00",
@@ -143,9 +143,9 @@
     },
     {
       "rank": 4,
-      "combined_odd": 5.48,
+      "combined_odd": 5.44,
       "win_prob": 0.2946,
-      "expected_value": 0.614,
+      "expected_value": 0.602,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -166,7 +166,7 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.33,
+          "odd": 1.32,
           "fair_prob": 0.6709,
           "drift": 0.0,
           "match_time": "18:00",
@@ -188,9 +188,9 @@
     },
     {
       "rank": 5,
-      "combined_odd": 4.9,
+      "combined_odd": 4.87,
       "win_prob": 0.294,
-      "expected_value": 0.441,
+      "expected_value": 0.431,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -211,7 +211,7 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.33,
+          "odd": 1.32,
           "fair_prob": 0.6709,
           "drift": 0.0,
           "match_time": "18:00",
@@ -233,7 +233,7 @@
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 6,
+    "total_prematch_runs": 7,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
