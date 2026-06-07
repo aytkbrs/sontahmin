@@ -1,15 +1,16 @@
 {
-  "generated_at": "2026-06-07T14:37:09+03:00",
+  "generated_at": "2026-06-07T14:47:47+03:00",
   "date": "2026-06-07",
-  "run_id": 1,
+  "run_id": 8,
   "total_events": 195,
   "events_with_stats": 146,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 5.19,
+      "combined_odd": 5.23,
       "win_prob": 0.3004,
-      "expected_value": 0.56,
+      "expected_value": 0.572,
+      "drift_bonus": 0.0,
       "legs": [
         {
           "event_id": 2918705,
@@ -19,6 +20,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 1.9,
           "fair_prob": 0.7037,
+          "drift": 0.0,
           "match_time": "23:30",
           "match_datetime": "2026-06-07T23:30+03:00"
         },
@@ -28,8 +30,9 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.36,
+          "odd": 1.37,
           "fair_prob": 0.6709,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         },
@@ -41,6 +44,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 2.01,
           "fair_prob": 0.6361,
+          "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
         }
@@ -48,9 +52,10 @@
     },
     {
       "rank": 2,
-      "combined_odd": 3.88,
+      "combined_odd": 3.9,
       "win_prob": 0.2958,
-      "expected_value": 0.146,
+      "expected_value": 0.155,
+      "drift_bonus": 0.0,
       "legs": [
         {
           "event_id": 2918705,
@@ -60,6 +65,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 1.9,
           "fair_prob": 0.7037,
+          "drift": 0.0,
           "match_time": "23:30",
           "match_datetime": "2026-06-07T23:30+03:00"
         },
@@ -69,8 +75,9 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.36,
+          "odd": 1.37,
           "fair_prob": 0.6709,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         },
@@ -82,6 +89,7 @@
           "outcome_label": "KG VAR",
           "odd": 1.5,
           "fair_prob": 0.6264,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         }
@@ -89,9 +97,10 @@
     },
     {
       "rank": 3,
-      "combined_odd": 4.73,
+      "combined_odd": 4.76,
       "win_prob": 0.2946,
-      "expected_value": 0.393,
+      "expected_value": 0.403,
+      "drift_bonus": 0.0,
       "legs": [
         {
           "event_id": 2918534,
@@ -101,6 +110,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 1.73,
           "fair_prob": 0.6902,
+          "drift": 0.0,
           "match_time": "21:00",
           "match_datetime": "2026-06-07T21:00+03:00"
         },
@@ -110,8 +120,9 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.36,
+          "odd": 1.37,
           "fair_prob": 0.6709,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         },
@@ -123,6 +134,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 2.01,
           "fair_prob": 0.6361,
+          "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
         }
@@ -130,9 +142,10 @@
     },
     {
       "rank": 4,
-      "combined_odd": 5.6,
+      "combined_odd": 5.65,
       "win_prob": 0.2946,
-      "expected_value": 0.651,
+      "expected_value": 0.663,
+      "drift_bonus": 0.0,
       "legs": [
         {
           "event_id": 2918757,
@@ -142,6 +155,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 2.05,
           "fair_prob": 0.6902,
+          "drift": 0.0,
           "match_time": "22:00",
           "match_datetime": "2026-06-07T22:00+03:00"
         },
@@ -151,8 +165,9 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.36,
+          "odd": 1.37,
           "fair_prob": 0.6709,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         },
@@ -164,6 +179,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 2.01,
           "fair_prob": 0.6361,
+          "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
         }
@@ -171,9 +187,10 @@
     },
     {
       "rank": 5,
-      "combined_odd": 5.01,
+      "combined_odd": 5.05,
       "win_prob": 0.294,
-      "expected_value": 0.474,
+      "expected_value": 0.485,
+      "drift_bonus": 0.0,
       "legs": [
         {
           "event_id": 2918705,
@@ -183,6 +200,7 @@
           "outcome_label": "ALT 2.5",
           "odd": 1.9,
           "fair_prob": 0.7037,
+          "drift": 0.0,
           "match_time": "23:30",
           "match_datetime": "2026-06-07T23:30+03:00"
         },
@@ -192,8 +210,9 @@
           "away": "Strommen",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.36,
+          "odd": 1.37,
           "fair_prob": 0.6709,
+          "drift": 0.0,
           "match_time": "18:00",
           "match_datetime": "2026-06-07T18:00+03:00"
         },
@@ -205,10 +224,16 @@
           "outcome_label": "ALT 2.5",
           "odd": 1.94,
           "fair_prob": 0.6227,
+          "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-07T19:00+03:00"
         }
       ]
     }
-  ]
+  ],
+  "accumulation": {
+    "total_prematch_runs": 3,
+    "total_result_labels": 0,
+    "total_training_rows": 0
+  }
 }
