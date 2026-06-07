@@ -39,6 +39,10 @@ class CandidateLeg:
     odd: float
     fair_prob: float
     overround: float
+    # drift > 0 → market moved toward this outcome since last run (confirming signal)
+    # drift < 0 → market moved away (contrarian signal)
+    # drift == 0 → no history available
+    drift: float = 0.0
 
 
 @dataclass(slots=True)
@@ -57,6 +61,9 @@ class EventEdge:
     fair_ou25_under: float | None
     fair_btts_yes: float | None
     fair_btts_no: float | None
+    drift_home: float | None
+    drift_draw: float | None
+    drift_away: float | None
     best_leg: CandidateLeg | None
     all_legs: list[CandidateLeg] = field(default_factory=list)
 
@@ -82,57 +89,24 @@ def _overround(odds: list[float | None]) -> float | None:
     return sum(1.0 / o for o in odds)  # type: ignore[arg-type]
 
 
-def _make_legs(
-    event_id: int,
-    competition_id: int | None,
-    home_name: str | None,
-    away_name: str | None,
-    event_epoch: int | None,
-    market: str,
-    outcome_keys: list[str],
-    odds: list[float | None],
-    min_odd: float = 1.30,
-    max_odd: float = 6.00,
-    min_fair_prob: float = 0.28,
-) -> list[CandidateLeg]:
-    fairs = _fair_probs(odds)
-    ov = _overround(odds)
-    if ov is None:
-        return []
-    legs = []
-    for key, odd, fair in zip(outcome_keys, odds, fairs):
-        if odd is None or fair is None:
-            continue
-        if odd < min_odd or odd > max_odd:
-            continue
-        if fair < min_fair_prob:
-            continue
-        legs.append(
-            CandidateLeg(
-                event_id=event_id,
-                competition_id=competition_id,
-                home_name=home_name,
-                away_name=away_name,
-                event_epoch=event_epoch,
-                market=market,
-                outcome=key,
-                odd=odd,
-                fair_prob=fair,
-                overround=ov,
-            )
-        )
-    return legs
-
-
-def compute_event_edge(run_id: int, row: sqlite3.Row, model_probs=None) -> EventEdge:
+def compute_event_edge(
+    run_id: int,
+    row: sqlite3.Row,
+    model_probs=None,
+    prev_implied: dict | None = None,
+) -> EventEdge:
     """Compute edge scores for one event.
 
     Parameters
     ----------
     model_probs : MatchProbs | None
         If provided (from Poisson model), use these as fair probabilities
-        instead of proportional margin removal.  This enables real edge
-        detection vs the bookmaker.
+        instead of proportional margin removal.
+    prev_implied : dict | None
+        Previous run's bookmaker implied probs for this event:
+        {'home': float, 'draw': float, 'away': float}.
+        Used to compute odds drift — change in implied probability since
+        the last prematch run for the same event.
     """
     event_id = row["event_id"]
     comp_id = row["competition_id"]
@@ -146,6 +120,22 @@ def compute_event_edge(run_id: int, row: sqlite3.Row, model_probs=None) -> Event
     ou_over, ou_under = row["ou25_over_odd"], row["ou25_under_odd"]
     btts_yes, btts_no = row["btts_yes_odd"], row["btts_no_odd"]
 
+    # Compute bookmaker implied probs (independent of model) for drift tracking
+    curr_h_impl = ((1 / h) / ov_1x2) if (h and h > _MIN_VALID_ODD and ov_1x2) else None
+    curr_d_impl = ((1 / d) / ov_1x2) if (d and d > _MIN_VALID_ODD and ov_1x2) else None
+    curr_a_impl = ((1 / a) / ov_1x2) if (a and a > _MIN_VALID_ODD and ov_1x2) else None
+
+    # Odds drift: positive = market moved TOWARD this outcome (bookmaker lowers odds)
+    drift_map: dict[str, float] = {}
+    drift_home = drift_draw = drift_away = None
+    if prev_implied and curr_h_impl is not None:
+        drift_home = curr_h_impl - prev_implied.get("home", curr_h_impl)
+        drift_draw = (curr_d_impl - prev_implied.get("draw", curr_d_impl)) if curr_d_impl is not None else None
+        drift_away = (curr_a_impl - prev_implied.get("away", curr_a_impl)) if curr_a_impl is not None else None
+        for k, v in [("home", drift_home), ("draw", drift_draw), ("away", drift_away)]:
+            if v is not None:
+                drift_map[k] = v
+
     # Use Poisson model probs when available; fall back to margin removal
     if model_probs is not None:
         fh, fd, fa = model_probs.p1, model_probs.px, model_probs.p2
@@ -156,8 +146,7 @@ def compute_event_edge(run_id: int, row: sqlite3.Row, model_probs=None) -> Event
         f_over, f_under = _fair_probs([ou_over, ou_under])
         f_yes, f_no = _fair_probs([btts_yes, btts_no])
 
-    # Build candidate legs — use model fair_probs, not derived from odds
-    def _legs_model(market: str, keys: list[str], odds: list, fairs: list) -> list[CandidateLeg]:
+    def _legs_model(market: str, keys: list, odds: list, fairs: list) -> list[CandidateLeg]:
         ov = _overround(odds)
         if ov is None:
             return []
@@ -175,6 +164,7 @@ def compute_event_edge(run_id: int, row: sqlite3.Row, model_probs=None) -> Event
                 event_id=event_id, competition_id=comp_id,
                 home_name=home, away_name=away, event_epoch=epoch,
                 market=market, outcome=key, odd=odd, fair_prob=fair, overround=ov,
+                drift=drift_map.get(key, 0.0),
             ))
         return result
 
@@ -205,6 +195,9 @@ def compute_event_edge(run_id: int, row: sqlite3.Row, model_probs=None) -> Event
         fair_ou25_under=f_under,
         fair_btts_yes=f_yes,
         fair_btts_no=f_no,
+        drift_home=drift_home,
+        drift_draw=drift_draw,
+        drift_away=drift_away,
         best_leg=best_leg,
         all_legs=all_legs,
     )
@@ -215,6 +208,9 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
 
     Uses Poisson model probabilities from event_stats_snapshots when available,
     otherwise falls back to proportional margin removal.
+
+    Also computes odds drift by comparing with the previous prematch run for
+    each event_id that appears in both runs.
     """
     from .poisson import MatchProbs as PoissonProbs
 
@@ -224,6 +220,26 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
     if run is None:
         return 0, []
     run_id = run["id"]
+
+    # Previous prematch run for drift computation
+    prev_run = conn.execute(
+        "SELECT id FROM ingest_runs WHERE bulletin_type = 0 AND id < ? ORDER BY id DESC LIMIT 1",
+        (run_id,),
+    ).fetchone()
+    prev_implied: dict[int, dict[str, float]] = {}
+    if prev_run:
+        prev_fs = conn.execute(
+            "SELECT event_id, implied_home, implied_draw, implied_away "
+            "FROM event_feature_snapshots WHERE run_id = ?",
+            (prev_run["id"],),
+        ).fetchall()
+        for pf in prev_fs:
+            if pf["implied_home"] is not None:
+                prev_implied[pf["event_id"]] = {
+                    "home": pf["implied_home"],
+                    "draw": pf["implied_draw"],
+                    "away": pf["implied_away"],
+                }
 
     rows = conn.execute(
         """
@@ -267,5 +283,6 @@ def score_latest_prematch(conn: sqlite3.Connection) -> tuple[int, list[EventEdge
                 p_btts=r["model_p_btts"],
                 p_no_btts=1.0 - r["model_p_btts"],
             )
-        edges.append(compute_event_edge(run_id, r, model_probs))
+        pi = prev_implied.get(r["event_id"])
+        edges.append(compute_event_edge(run_id, r, model_probs, prev_implied=pi))
     return run_id, edges

@@ -1,5 +1,5 @@
-data/*.sqlite3
-data/*.db
+# SQLite is committed to git so history accumulates.
+# data/*.sqlite3 intentionally NOT ignored.
 __pycache__/
 *.pyc
 *.pyo

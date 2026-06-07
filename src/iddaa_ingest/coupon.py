@@ -2,15 +2,8 @@
 
 Takes edge-scored candidate legs and produces ranked 3-leg coupons.
 Selection objective: maximise `combined_fair_prob` subject to a minimum
-combined odd, while penalising correlated legs (same competition).
-
-With only proportional-removal fair probs the EV of every leg is
-`1/overround - 1` (negative), so all 3-leg coupons with equal overrounds
-have the same EV.  The selection therefore targets the highest probability
-of the coupon actually winning (highest `combined_fair_prob`) at a payout
-that is worth betting (`combined_odd >= min_combined_odd`).  Once a
-calibrated model replaces the fair probs the same assembly logic picks up
-real edges automatically.
+combined odd, while penalising correlated legs (same competition) and
+rewarding odds drift confirmation (market moving toward our selected outcome).
 """
 
 from __future__ import annotations
@@ -34,6 +27,7 @@ class CouponLeg:
     odd: float
     fair_prob: float
     overround: float
+    drift: float = 0.0
 
     @property
     def label(self) -> str:
@@ -49,6 +43,7 @@ class Coupon:
     expected_value: float
     log_ev: float
     same_competition_pairs: int
+    drift_bonus: float
     final_score: float
 
 
@@ -63,6 +58,7 @@ def _build_leg(candidate: CandidateLeg) -> CouponLeg:
         odd=candidate.odd,
         fair_prob=candidate.fair_prob,
         overround=candidate.overround,
+        drift=candidate.drift,
     )
 
 
@@ -82,8 +78,17 @@ def _score_coupon(legs: list[CouponLeg]) -> Coupon:
         1 for a, b in itertools.combinations(comp_ids, 2) if a == b
     )
 
-    # Penalise correlated legs (same competition)
-    final_score = math.log(max(combined_fair_prob, 1e-9)) - 0.15 * same_comp_pairs
+    # Drift bonus: reward legs where the market is also moving toward our selection.
+    # Only applies when drift > 0 (market confirms our model's direction).
+    # Scale: drift is in implied-prob units (~0.01-0.05), multiplied by 1.5.
+    drift_bonus = sum(max(0.0, lg.drift) * 1.5 for lg in legs)
+
+    # Penalise correlated legs (same competition), reward drift confirmation
+    final_score = (
+        math.log(max(combined_fair_prob, 1e-9))
+        - 0.15 * same_comp_pairs
+        + drift_bonus
+    )
 
     return Coupon(
         legs=legs,
@@ -92,6 +97,7 @@ def _score_coupon(legs: list[CouponLeg]) -> Coupon:
         expected_value=ev,
         log_ev=log_ev,
         same_competition_pairs=same_comp_pairs,
+        drift_bonus=drift_bonus,
         final_score=final_score,
     )
 
@@ -111,12 +117,6 @@ def build_coupons(
     date_filter : "YYYY-MM-DD" string in local time (UTC+3).
         When set, only legs whose event_epoch falls on that calendar day
         are included.
-    """
-    """Build ranked coupons from a list of EventEdge objects.
-
-    For each event we take the best leg (highest fair_prob) plus
-    up to two alternative legs so that the search can mix market types.
-    Events without any valid candidate are skipped.
     """
     # Optional date filter (UTC+3 Turkey local time)
     epoch_min: int | None = None
@@ -157,7 +157,6 @@ def build_coupons(
 
     coupons: list[Coupon] = []
     for trio in itertools.combinations(pool, 3):
-        # Each leg must be from a different event (guaranteed by per_event dedup)
         combined_odd = trio[0].odd * trio[1].odd * trio[2].odd
         if combined_odd < min_combined_odd:
             continue
@@ -169,12 +168,15 @@ def build_coupons(
 
 
 def format_coupon(rank: int, coupon: Coupon) -> str:
+    drift_str = f"  drift_bonus={coupon.drift_bonus:+.3f}" if coupon.drift_bonus != 0 else ""
     lines = [
         f"Kupon #{rank}  "
         f"combined_odd={coupon.combined_odd:.2f}  "
         f"win_prob={coupon.combined_fair_prob:.1%}  "
-        f"EV={coupon.expected_value:+.2f}",
+        f"EV={coupon.expected_value:+.2f}"
+        f"{drift_str}",
     ]
     for i, leg in enumerate(coupon.legs, 1):
-        lines.append(f"  Ayak {i}: {leg.label}")
+        drift_tag = f"  [drift {leg.drift:+.3f}]" if leg.drift != 0 else ""
+        lines.append(f"  Ayak {i}: {leg.label}{drift_tag}")
     return "\n".join(lines)

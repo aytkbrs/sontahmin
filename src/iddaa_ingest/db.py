@@ -211,10 +211,14 @@ def init_db(conn: sqlite3.Connection) -> None:
             fair_ou25_under REAL,
             fair_btts_yes REAL,
             fair_btts_no REAL,
+            drift_home REAL,
+            drift_draw REAL,
+            drift_away REAL,
             best_leg_market TEXT,
             best_leg_outcome TEXT,
             best_leg_odd REAL,
             best_leg_fair_prob REAL,
+            best_leg_drift REAL,
             PRIMARY KEY (run_id, event_id),
             FOREIGN KEY (run_id) REFERENCES ingest_runs(id) ON DELETE CASCADE
         );
@@ -249,6 +253,20 @@ def init_db(conn: sqlite3.Connection) -> None:
             combined_fair_prob REAL NOT NULL,
             expected_value REAL NOT NULL,
             final_score REAL NOT NULL,
+            FOREIGN KEY (run_id) REFERENCES ingest_runs(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS coupon_results (
+            event_id INTEGER NOT NULL,
+            run_id INTEGER NOT NULL,
+            rank INTEGER NOT NULL,
+            outcome TEXT NOT NULL,
+            odd REAL NOT NULL,
+            fair_prob REAL NOT NULL,
+            drift REAL NOT NULL DEFAULT 0,
+            result TEXT,
+            settled_at TEXT,
+            PRIMARY KEY (event_id, run_id),
             FOREIGN KEY (run_id) REFERENCES ingest_runs(id) ON DELETE CASCADE
         );
 
@@ -293,6 +311,22 @@ def init_db(conn: sqlite3.Connection) -> None:
         );
         """
     )
+    _migrate(conn)
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Add columns that were introduced after the initial schema."""
+    migrations = [
+        "ALTER TABLE edge_scores ADD COLUMN drift_home REAL",
+        "ALTER TABLE edge_scores ADD COLUMN drift_draw REAL",
+        "ALTER TABLE edge_scores ADD COLUMN drift_away REAL",
+        "ALTER TABLE edge_scores ADD COLUMN best_leg_drift REAL",
+    ]
+    for sql in migrations:
+        try:
+            conn.execute(sql)
+        except sqlite3.OperationalError:
+            pass  # column already exists
 
 
 def insert_run(
@@ -548,9 +582,10 @@ def insert_edge_score(conn: sqlite3.Connection, edge) -> None:
             run_id, event_id, competition_id, home_name, away_name, event_epoch,
             overround_1x2, fair_home, fair_draw, fair_away,
             fair_ou25_over, fair_ou25_under, fair_btts_yes, fair_btts_no,
-            best_leg_market, best_leg_outcome, best_leg_odd, best_leg_fair_prob
+            drift_home, drift_draw, drift_away,
+            best_leg_market, best_leg_outcome, best_leg_odd, best_leg_fair_prob, best_leg_drift
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(run_id, event_id) DO UPDATE SET
             overround_1x2 = excluded.overround_1x2,
             fair_home = excluded.fair_home,
@@ -560,10 +595,14 @@ def insert_edge_score(conn: sqlite3.Connection, edge) -> None:
             fair_ou25_under = excluded.fair_ou25_under,
             fair_btts_yes = excluded.fair_btts_yes,
             fair_btts_no = excluded.fair_btts_no,
+            drift_home = excluded.drift_home,
+            drift_draw = excluded.drift_draw,
+            drift_away = excluded.drift_away,
             best_leg_market = excluded.best_leg_market,
             best_leg_outcome = excluded.best_leg_outcome,
             best_leg_odd = excluded.best_leg_odd,
-            best_leg_fair_prob = excluded.best_leg_fair_prob
+            best_leg_fair_prob = excluded.best_leg_fair_prob,
+            best_leg_drift = excluded.best_leg_drift
         """,
         (
             edge.run_id,
@@ -580,10 +619,14 @@ def insert_edge_score(conn: sqlite3.Connection, edge) -> None:
             edge.fair_ou25_under,
             edge.fair_btts_yes,
             edge.fair_btts_no,
+            edge.drift_home,
+            edge.drift_draw,
+            edge.drift_away,
             best.market if best else None,
             best.outcome if best else None,
             best.odd if best else None,
             best.fair_prob if best else None,
+            best.drift if best else None,
         ),
     )
 

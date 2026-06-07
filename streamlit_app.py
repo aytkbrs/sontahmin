@@ -41,12 +41,22 @@ try:
 except Exception:
     generated_label = generated_at
 
+accumulation = data.get("accumulation", {})
+total_runs = accumulation.get("total_prematch_runs", 0)
+total_labels = accumulation.get("total_result_labels", 0)
+total_training = accumulation.get("total_training_rows", 0)
+
 st.markdown(f"### 📅 {date_str}")
 st.caption(
     f"Son güncelleme: **{generated_label}** · "
     f"{total_events} maç bülteni · "
     f"{events_with_stats} maç form verisi"
 )
+
+col_a, col_b, col_c = st.columns(3)
+col_a.metric("Toplam Gün", total_runs, help="Birikmüş prematch bülteni sayısı")
+col_b.metric("Sonuç Etiketi", total_labels, help="Tamamlanmış ve etiketlenmiş maç sayısı")
+col_c.metric("Training Satırı", total_training, help="Modeli kalibre etmek için kullanılabilir veri")
 
 if not coupons:
     st.warning("Bugün için uygun kupon bulunamadı.")
@@ -55,18 +65,25 @@ if not coupons:
 st.divider()
 
 # ── model info ─────────────────────────────────────────────────────────────
-with st.expander("ℹ️ Model nasıl çalışıyor?"):
+with st.expander("ℹ️ Model nasıl çalışıyor? (Zamanla öğrenir)"):
     st.markdown("""
 Her maç için **Dixon-Coles Poisson modeli** kullanılır:
 
-1. **Form verisi çekilir** — her takımın son 6 maçı (gol, form)
-2. **Beklenen gol hesaplanır** — ev/deplasman takımının gücüne göre
-3. **Olasılık hesaplanır** — 1/X/2, ÜST/ALT, KG (9×9 skor matrisi)
-4. **Edge bulunur** — model olasılığı vs. bookmaker implied probability
-5. **3 ayak seçilir** — en yüksek combined EV, farklı müsabakalar tercih edilir
+1. **Form verisi çekilir** — her takımın son 6 maçı (gol, form) — iddaa istatistik API'si
+2. **Beklenen gol hesaplanır** — ev/deplasman takımının gücüne göre (Bayesian blend)
+3. **Olasılık hesaplanır** — 1/X/2, ÜST/ALT, KG (9×9 skor matrisi, DC düzeltmesi)
+4. **Oran kayması (drift) hesaplanır** — aynı maç bir önceki günkü oranla karşılaştırılır; piyasa bizimle aynı yönde mi hareket ediyor?
+5. **Edge bulunur** — Poisson olasılığı vs. bookmaker implied probability
+6. **3 ayak seçilir** — en yüksek combined EV + drift onayı, farklı müsabakalar tercih edilir
 
-EV (Beklenen Değer): 0.50 = kupon değeri %50 pozitif beklenti
-*Küçük örneklem (6 maç/takım) = yüksek varyans. Zamanla kalibrasyon gelişir.*
+**Zamanla nasıl güçlenir:**
+- Her gün DB'ye yeni bir bülten snapshot'ı eklenir
+- Tamamlanan maçlar otomatik etiketlenir (1/X/2, ÜST/ALT, KG)
+- Birikmiş veriyle model kalibrasyonu yapılabilir
+- Oran kayması sinyali ancak tarihsel veri biriktikçe güçlenir
+
+*Drift > 0 → piyasa da bizimle aynı yönde hareket ediyor (güçlü sinyal)*
+*Drift < 0 → piyasa karşı yönde hareket ediyor (contrarian)*
     """)
 
 st.divider()
@@ -109,10 +126,16 @@ for coupon in coupons:
             fair_prob = leg["fair_prob"]
             match_time = leg["match_time"]
 
+            drift = leg.get("drift", 0.0)
             col1, col2 = st.columns([3, 1])
             with col1:
                 st.markdown(f"**Ayak {i}** &nbsp; `{match_time}` &nbsp; {home} — {away}")
-                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp; {outcome_label} &nbsp; **@ {odd:.2f}** &nbsp; *(fair: {fair_prob:.1%})*")
+                drift_tag = ""
+                if drift > 0.01:
+                    drift_tag = f" &nbsp; 📈 `drift {drift:+.3f}`"
+                elif drift < -0.01:
+                    drift_tag = f" &nbsp; 📉 `drift {drift:+.3f}`"
+                st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp; {outcome_label} &nbsp; **@ {odd:.2f}** &nbsp; *(fair: {fair_prob:.1%})*{drift_tag}")
             with col2:
                 ev_leg = round(fair_prob * odd - 1, 3)
                 color = "green" if ev_leg > 0 else "red"
