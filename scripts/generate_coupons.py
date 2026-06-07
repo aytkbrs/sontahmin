@@ -34,6 +34,12 @@ from src.iddaa_ingest.db import (
 from src.iddaa_ingest.ingest import ingest_prematch_football, ingest_live_scoreboard
 from src.iddaa_ingest.labels import generate_result_labels, build_prematch_training_dataset
 from src.iddaa_ingest.db import insert_external_odds
+from src.iddaa_ingest.team_profiles import (
+    update_profiles_from_labels,
+    get_team_profile,
+    blend_api_and_profile,
+    init_team_schema,
+)
 from src.iddaa_ingest.model import score_latest_prematch
 from src.iddaa_ingest.poisson import compute_match_probs
 from src.iddaa_ingest.stats import extract_match_stats
@@ -145,18 +151,20 @@ def _fetch_external_odds(run_id: int, event_rows: list) -> None:
         print(f"      [odds-api] Hata: {exc}")
 
 
-def _fetch_live_and_label() -> tuple[int, int, int]:
-    """Canlı skor çek, biten maçları etiketle, training satırı üret."""
+def _fetch_live_and_label() -> tuple[int, int, int, int]:
+    """Canlı skor çek, biten maçları etiketle, takım profillerini güncelle."""
     try:
         live_result = ingest_live_scoreboard()
         with connect(DB_PATH) as conn:
             init_db(conn)
+            init_team_schema(conn)
             labels = generate_result_labels(conn)
             training = build_prematch_training_dataset(conn)
-        return live_result.event_count, labels, training
+            profile_rows = update_profiles_from_labels(conn)
+        return live_result.event_count, labels, training, profile_rows
     except Exception as exc:
         print(f"      [uyarı] live skor hatası: {exc}")
-        return 0, 0, 0
+        return 0, 0, 0, 0
 
 
 def _accumulation_stats() -> dict:
@@ -179,11 +187,19 @@ def _accumulation_stats() -> dict:
             """,
             (today,),
         ).fetchone()[0]
+        try:
+            n_teams = conn.execute("SELECT COUNT(*) FROM teams").fetchone()[0]
+            n_team_matches = conn.execute("SELECT COUNT(*) FROM team_match_results").fetchone()[0] // 2
+        except Exception:
+            n_teams = 0
+            n_team_matches = 0
     return {
         "total_prematch_runs": total_runs,
         "total_result_labels": total_labels,
         "total_training_rows": total_training,
         "pinnacle_covered_today": pinnacle_covered,
+        "tracked_teams": n_teams,
+        "team_match_history": n_team_matches,
     }
 
 
@@ -219,8 +235,8 @@ def run() -> None:
     if not need_full_pipeline:
         # Bulletin unchanged, same day → only update timestamp + live scores
         print("\nBülten değişmedi, yeni gün yok → sadece skor ve zaman güncelleniyor.")
-        live_count, labels, training = _fetch_live_and_label()
-        print(f"      {live_count} canlı maç · {labels} etiket · {training} training satırı")
+        live_count, labels, training, profile_rows = _fetch_live_and_label()
+        print(f"      {live_count} canlı maç · {labels} etiket · {training} training · {profile_rows} profil")
 
         if existing_json:
             existing_json["last_checked"] = now_str
@@ -244,6 +260,15 @@ def run() -> None:
             (run_id,),
         ).fetchall()
 
+    # Takım profillerini önceden yükle (tek sorgulama, her maç için tekrar bağlanma)
+    with connect(DB_PATH) as _pconn:
+        init_db(_pconn)
+        init_team_schema(_pconn)
+        home_profiles = {ev["home_name"]: get_team_profile(_pconn, ev["home_name"] or "") for ev in event_rows}
+        away_profiles = {ev["away_name"]: get_team_profile(_pconn, ev["away_name"] or "") for ev in event_rows}
+    profile_used = sum(1 for p in home_profiles.values() if p is not None)
+    print(f"      Takım profili: {profile_used}/{len(event_rows)} ev takımı için geçmiş veri mevcut")
+
     snaps: list[_StatsSnap] = []
     for ev in event_rows:
         eid = ev["event_id"]
@@ -252,7 +277,50 @@ def run() -> None:
             if not r.get("isSuccess"):
                 raise RuntimeError("isSuccess=false")
             ms = extract_match_stats(eid, r.get("data", {}))
-            probs = compute_match_probs(ms) if ms.has_data else None
+
+            # Takım profili varsa API verisini blend et
+            hp = home_profiles.get(ev["home_name"])
+            ap = away_profiles.get(ev["away_name"])
+
+            if ms.has_data and (hp or ap):
+                from src.iddaa_ingest.stats import TeamStats, MatchStats as MS2
+                blended_home = TeamStats(
+                    name=ms.home.name,
+                    n_matches=ms.home.n_matches + (hp.n_home if hp else 0),
+                    avg_scored=blend_api_and_profile(
+                        ms.home.avg_scored, ms.home.n_matches,
+                        hp.home_scored if hp else ms.home.avg_scored,
+                        hp.n_home if hp else 0,
+                    ),
+                    avg_conceded=blend_api_and_profile(
+                        ms.home.avg_conceded, ms.home.n_matches,
+                        hp.home_conceded if hp else ms.home.avg_conceded,
+                        hp.n_home if hp else 0,
+                    ),
+                    wins=ms.home.wins, draws=ms.home.draws, losses=ms.home.losses,
+                    avg_corners=ms.home.avg_corners, avg_yellow_cards=ms.home.avg_yellow_cards,
+                )
+                blended_away = TeamStats(
+                    name=ms.away.name,
+                    n_matches=ms.away.n_matches + (ap.n_away if ap else 0),
+                    avg_scored=blend_api_and_profile(
+                        ms.away.avg_scored, ms.away.n_matches,
+                        ap.away_scored if ap else ms.away.avg_scored,
+                        ap.n_away if ap else 0,
+                    ),
+                    avg_conceded=blend_api_and_profile(
+                        ms.away.avg_conceded, ms.away.n_matches,
+                        ap.away_conceded if ap else ms.away.avg_conceded,
+                        ap.n_away if ap else 0,
+                    ),
+                    wins=ms.away.wins, draws=ms.away.draws, losses=ms.away.losses,
+                    avg_corners=ms.away.avg_corners, avg_yellow_cards=ms.away.avg_yellow_cards,
+                )
+                ms_blended = MS2(event_id=eid, home=blended_home, away=blended_away, has_data=True)
+                probs = compute_match_probs(ms_blended)
+            else:
+                probs = compute_match_probs(ms) if ms.has_data else None
+
             snap = _StatsSnap(
                 event_id=eid,
                 home_name=ev["home_name"],
@@ -311,10 +379,10 @@ def run() -> None:
         save_coupon_candidates(conn, run_id, coupons)
     print(f"      {len(coupons)} kupon üretildi")
 
-    # 5 — Live scores + labels + training
-    print("[5/5] Canlı skor + maç sonuçları...")
-    live_count, labels, training = _fetch_live_and_label()
-    print(f"      {live_count} canlı maç · {labels} etiket · {training} training satırı")
+    # 5 — Live scores + labels + training + team profiles
+    print("[5/5] Canlı skor + maç sonuçları + takım profilleri...")
+    live_count, labels, training, profile_rows = _fetch_live_and_label()
+    print(f"      {live_count} canlı maç · {labels} etiket · {training} training · {profile_rows} yeni profil satırı")
 
     # Serialize
     coupon_list = []

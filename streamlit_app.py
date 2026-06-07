@@ -62,11 +62,15 @@ st.caption(
 )
 
 pinnacle_covered = accumulation.get("pinnacle_covered_today", 0)
-col_a, col_b, col_c, col_d = st.columns(4)
+tracked_teams = accumulation.get("tracked_teams", 0)
+team_match_history = accumulation.get("team_match_history", 0)
+
+col_a, col_b, col_c, col_d, col_e = st.columns(5)
 col_a.metric("Toplam Gün", total_runs, help="Birikmüş prematch bülteni sayısı")
 col_b.metric("Sonuç Etiketi", total_labels, help="Tamamlanmış ve etiketlenmiş maç sayısı")
-col_c.metric("Training Satırı", total_training, help="Modeli kalibre etmek için kullanılabilir veri")
-col_d.metric("Pinnacle Kapsama", pinnacle_covered, help="Bugün Pinnacle oranı bulunan maç sayısı")
+col_c.metric("Takım Profili", tracked_teams, help=f"DB'de takip edilen takım sayısı ({team_match_history} toplam maç)")
+col_d.metric("Training Satırı", total_training, help="Modeli kalibre etmek için kullanılabilir veri")
+col_e.metric("Pinnacle Kapsama", pinnacle_covered, help="Bugün Pinnacle oranı bulunan maç sayısı")
 
 if not coupons:
     st.warning("Bugün için uygun kupon bulunamadı.")

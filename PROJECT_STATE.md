@@ -1,6 +1,6 @@
 # Project State
 
-Last updated: 2026-06-07 (The Odds API Pinnacle entegrasyonu)
+Last updated: 2026-06-07 (takım profil sistemi + Pinnacle entegrasyonu)
 
 ## Goal
 Build an iddaa prediction system with strong project continuity between sessions.
@@ -228,6 +228,20 @@ This file must be updated after every meaningful project change.
 - Add the first coupon-construction research layer on top of the stored bulletin-only dataset
 
 ## Change Log
+
+- 2026-06-07 (takım profil sistemi):
+  - `src/iddaa_ingest/team_profiles.py` oluşturuldu:
+    - `teams` + `team_match_results` tabloları (DB'de birikimli takım geçmişi)
+    - `update_profiles_from_labels()`: her maç etiketlendiğinde iki takımın
+       ev/deplasman maç sonuçları kaydediliyor
+    - `get_team_profile()`: takım adıyla profil sorgusu (≥8 maç gerekli)
+    - `blend_api_and_profile()`: iddaa API 6-maç penceresi + kendi verimiz
+      Bayesian blend → n artıkça API'nin etkisi azalıyor, kendi verimiz baskın
+  - `generate_coupons.py`: Poisson hesaplamadan önce takım profilleri yükleniyor,
+    blend edilmiş MatchStats ile `compute_match_probs` çağrılıyor
+  - Streamlit: "Takım Profili" + "team_match_history" metrikleri eklendi
+  - **Zamanla nasıl iyileşir**: 8 maçtan itibaren blend başlar, 30+ maçta API'yi geçer,
+    80+ maçta çok güvenilir takım gücü tahmini yapılır
 
 - 2026-06-07 (The Odds API Pinnacle entegrasyonu):
   - `src/iddaa_ingest/odds_api.py` oluşturuldu:
