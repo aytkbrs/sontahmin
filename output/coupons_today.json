@@ -1,106 +1,16 @@
 {
-  "generated_at": "2026-06-07T19:22:57+03:00",
-  "last_checked": "2026-06-07T19:22:57+03:00",
+  "generated_at": "2026-06-07T21:10:11+03:00",
+  "last_checked": "2026-06-07T21:10:11+03:00",
   "date": "2026-06-07",
-  "run_id": 20,
-  "total_events": 178,
-  "events_with_stats": 129,
+  "run_id": 22,
+  "total_events": 167,
+  "events_with_stats": 118,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 5.62,
-      "win_prob": 0.254,
-      "expected_value": 0.429,
-      "drift_bonus": 0.0,
-      "legs": [
-        {
-          "event_id": 2918705,
-          "home": "Tucuman",
-          "away": "Quilmes Atletico Club",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.9,
-          "fair_prob": 0.7037,
-          "drift": 0.0,
-          "match_time": "23:30",
-          "match_datetime": "2026-06-07T23:30+03:00"
-        },
-        {
-          "event_id": 2920597,
-          "home": "Huachipato",
-          "away": "Colo Colo",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.51,
-          "fair_prob": 0.6057,
-          "drift": 0.0,
-          "match_time": "22:00",
-          "match_datetime": "2026-06-07T22:00+03:00"
-        },
-        {
-          "event_id": 2992492,
-          "home": "Chabab Atlas Khenifra",
-          "away": "Sccm Chabab Mohammedia",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.96,
-          "fair_prob": 0.596,
-          "drift": 0.0,
-          "match_time": "20:00",
-          "match_datetime": "2026-06-07T20:00+03:00"
-        }
-      ]
-    },
-    {
-      "rank": 2,
-      "combined_odd": 5.05,
+      "combined_odd": 5.84,
       "win_prob": 0.2942,
-      "expected_value": 0.485,
-      "drift_bonus": 0.0,
-      "legs": [
-        {
-          "event_id": 2918705,
-          "home": "Tucuman",
-          "away": "Quilmes Atletico Club",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.9,
-          "fair_prob": 0.7037,
-          "drift": 0.0,
-          "match_time": "23:30",
-          "match_datetime": "2026-06-07T23:30+03:00"
-        },
-        {
-          "event_id": 2918534,
-          "home": "Deportivo Moron",
-          "away": "Club Almirante Brown",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.76,
-          "fair_prob": 0.6902,
-          "drift": 0.0,
-          "match_time": "21:00",
-          "match_datetime": "2026-06-07T21:00+03:00"
-        },
-        {
-          "event_id": 2920597,
-          "home": "Huachipato",
-          "away": "Colo Colo",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.51,
-          "fair_prob": 0.6057,
-          "drift": 0.0,
-          "match_time": "22:00",
-          "match_datetime": "2026-06-07T22:00+03:00"
-        }
-      ]
-    },
-    {
-      "rank": 3,
-      "combined_odd": 5.88,
-      "win_prob": 0.2942,
-      "expected_value": 0.73,
+      "expected_value": 0.719,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -133,7 +43,97 @@
           "away": "Colo Colo",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.51,
+          "odd": 1.5,
+          "fair_prob": 0.6057,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "combined_odd": 5.5,
+      "win_prob": 0.2827,
+      "expected_value": 0.555,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2918705,
+          "home": "Tucuman",
+          "away": "Quilmes Atletico Club",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.9,
+          "fair_prob": 0.7037,
+          "drift": 0.0,
+          "match_time": "23:30",
+          "match_datetime": "2026-06-07T23:30+03:00"
+        },
+        {
+          "event_id": 2918261,
+          "home": "Chaco For Ever",
+          "away": "Ferro Carril Oeste",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.93,
+          "fair_prob": 0.6631,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        },
+        {
+          "event_id": 2920597,
+          "home": "Huachipato",
+          "away": "Colo Colo",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.5,
+          "fair_prob": 0.6057,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "combined_odd": 5.93,
+      "win_prob": 0.2772,
+      "expected_value": 0.645,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2918757,
+          "home": "Agropecuario Argentino",
+          "away": "Patronato P",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 2.05,
+          "fair_prob": 0.6902,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        },
+        {
+          "event_id": 2918261,
+          "home": "Chaco For Ever",
+          "away": "Ferro Carril Oeste",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.93,
+          "fair_prob": 0.6631,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
+        },
+        {
+          "event_id": 2920597,
+          "home": "Huachipato",
+          "away": "Colo Colo",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.5,
           "fair_prob": 0.6057,
           "drift": 0.0,
           "match_time": "22:00",
@@ -143,9 +143,9 @@
     },
     {
       "rank": 4,
-      "combined_odd": 5.54,
-      "win_prob": 0.2506,
-      "expected_value": 0.388,
+      "combined_odd": 5.07,
+      "win_prob": 0.2654,
+      "expected_value": 0.346,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -159,6 +159,18 @@
           "drift": 0.0,
           "match_time": "23:30",
           "match_datetime": "2026-06-07T23:30+03:00"
+        },
+        {
+          "event_id": 2918832,
+          "home": "Chacarita Juniors",
+          "away": "CA Temperley",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.78,
+          "fair_prob": 0.6227,
+          "drift": 0.0,
+          "match_time": "21:30",
+          "match_datetime": "2026-06-07T21:30+03:00"
         },
         {
           "event_id": 2920597,
@@ -166,74 +178,62 @@
           "away": "Colo Colo",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.51,
+          "odd": 1.5,
           "fair_prob": 0.6057,
           "drift": 0.0,
           "match_time": "22:00",
           "match_datetime": "2026-06-07T22:00+03:00"
-        },
-        {
-          "event_id": 2920623,
-          "home": "Deportes La Serena",
-          "away": "Deportes Union La Calera",
-          "outcome_key": "over",
-          "outcome_label": "ÜST 2.5",
-          "odd": 1.93,
-          "fair_prob": 0.5879,
-          "drift": 0.0,
-          "match_time": "19:30",
-          "match_datetime": "2026-06-07T19:30+03:00"
         }
       ]
     },
     {
       "rank": 5,
-      "combined_odd": 6.55,
-      "win_prob": 0.2895,
-      "expected_value": 0.897,
+      "combined_odd": 5.47,
+      "win_prob": 0.2603,
+      "expected_value": 0.425,
       "drift_bonus": 0.0,
       "legs": [
         {
-          "event_id": 2918705,
-          "home": "Tucuman",
-          "away": "Quilmes Atletico Club",
+          "event_id": 2918757,
+          "home": "Agropecuario Argentino",
+          "away": "Patronato P",
           "outcome_key": "under",
           "outcome_label": "ALT 2.5",
-          "odd": 1.9,
-          "fair_prob": 0.7037,
-          "drift": 0.0,
-          "match_time": "23:30",
-          "match_datetime": "2026-06-07T23:30+03:00"
-        },
-        {
-          "event_id": 2918534,
-          "home": "Deportivo Moron",
-          "away": "Club Almirante Brown",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.76,
+          "odd": 2.05,
           "fair_prob": 0.6902,
           "drift": 0.0,
-          "match_time": "21:00",
-          "match_datetime": "2026-06-07T21:00+03:00"
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
         },
         {
-          "event_id": 2992492,
-          "home": "Chabab Atlas Khenifra",
-          "away": "Sccm Chabab Mohammedia",
+          "event_id": 2918832,
+          "home": "Chacarita Juniors",
+          "away": "CA Temperley",
           "outcome_key": "under",
           "outcome_label": "ALT 2.5",
-          "odd": 1.96,
-          "fair_prob": 0.596,
+          "odd": 1.78,
+          "fair_prob": 0.6227,
           "drift": 0.0,
-          "match_time": "20:00",
-          "match_datetime": "2026-06-07T20:00+03:00"
+          "match_time": "21:30",
+          "match_datetime": "2026-06-07T21:30+03:00"
+        },
+        {
+          "event_id": 2920597,
+          "home": "Huachipato",
+          "away": "Colo Colo",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.5,
+          "fair_prob": 0.6057,
+          "drift": 0.0,
+          "match_time": "22:00",
+          "match_datetime": "2026-06-07T22:00+03:00"
         }
       ]
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 9,
+    "total_prematch_runs": 10,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
