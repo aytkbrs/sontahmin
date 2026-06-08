@@ -1,13 +1,58 @@
 {
-  "generated_at": "2026-06-08T03:16:38+03:00",
-  "last_checked": "2026-06-08T03:16:38+03:00",
+  "generated_at": "2026-06-08T08:57:47+03:00",
+  "last_checked": "2026-06-08T08:57:47+03:00",
   "date": "2026-06-08",
-  "run_id": 28,
+  "run_id": 30,
   "total_events": 138,
   "events_with_stats": 89,
   "coupons": [
     {
       "rank": 1,
+      "combined_odd": 2.9,
+      "win_prob": 0.2067,
+      "expected_value": -0.4,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2989401,
+          "home": "ZED",
+          "away": "Wadi Degla",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.44,
+          "fair_prob": 0.6093,
+          "drift": 0.0,
+          "match_time": "17:00",
+          "match_datetime": "2026-06-08T17:00+03:00"
+        },
+        {
+          "event_id": 2990121,
+          "home": "Fus Rabat",
+          "away": "Hassan Jdidi",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.42,
+          "fair_prob": 0.5828,
+          "drift": 0.0,
+          "match_time": "19:00",
+          "match_datetime": "2026-06-08T19:00+03:00"
+        },
+        {
+          "event_id": 2974091,
+          "home": "Dfk Dainava ",
+          "away": "FK Garliava",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.42,
+          "fair_prob": 0.5819,
+          "drift": 0.0,
+          "match_time": "19:00",
+          "match_datetime": "2026-06-08T19:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 2,
       "combined_odd": 2.92,
       "win_prob": 0.2067,
       "expected_value": -0.396,
@@ -52,55 +97,10 @@
       ]
     },
     {
-      "rank": 2,
-      "combined_odd": 3.19,
-      "win_prob": 0.1963,
-      "expected_value": -0.373,
-      "drift_bonus": 0.0,
-      "legs": [
-        {
-          "event_id": 2989401,
-          "home": "ZED",
-          "away": "Wadi Degla",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.44,
-          "fair_prob": 0.6093,
-          "drift": 0.0,
-          "match_time": "17:00",
-          "match_datetime": "2026-06-08T17:00+03:00"
-        },
-        {
-          "event_id": 2990192,
-          "home": "RSB Berkane",
-          "away": "Itt. Tanger",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 1.43,
-          "fair_prob": 0.5828,
-          "drift": 0.0,
-          "match_time": "21:00",
-          "match_datetime": "2026-06-08T21:00+03:00"
-        },
-        {
-          "event_id": 2932495,
-          "home": "FC KTP",
-          "away": "Haka",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.55,
-          "fair_prob": 0.5528,
-          "drift": 0.0,
-          "match_time": "18:30",
-          "match_datetime": "2026-06-08T18:30+03:00"
-        }
-      ]
-    },
-    {
       "rank": 3,
-      "combined_odd": 3.17,
-      "win_prob": 0.196,
-      "expected_value": -0.379,
+      "combined_odd": 3.21,
+      "win_prob": 0.1963,
+      "expected_value": -0.37,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -116,13 +116,13 @@
           "match_datetime": "2026-06-08T17:00+03:00"
         },
         {
-          "event_id": 2974091,
-          "home": "Dfk Dainava ",
-          "away": "FK Garliava",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
+          "event_id": 2990121,
+          "home": "Fus Rabat",
+          "away": "Hassan Jdidi",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
           "odd": 1.42,
-          "fair_prob": 0.5819,
+          "fair_prob": 0.5828,
           "drift": 0.0,
           "match_time": "19:00",
           "match_datetime": "2026-06-08T19:00+03:00"
@@ -133,7 +133,7 @@
           "away": "Haka",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.55,
+          "odd": 1.57,
           "fair_prob": 0.5528,
           "drift": 0.0,
           "match_time": "18:30",
@@ -143,9 +143,9 @@
     },
     {
       "rank": 4,
-      "combined_odd": 4.92,
-      "win_prob": 0.1931,
-      "expected_value": -0.05,
+      "combined_odd": 3.23,
+      "win_prob": 0.1963,
+      "expected_value": -0.365,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -173,24 +173,24 @@
           "match_datetime": "2026-06-08T21:00+03:00"
         },
         {
-          "event_id": 2935306,
-          "home": "Fransa",
-          "away": "Kuzey İrlanda",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 2.39,
-          "fair_prob": 0.5438,
+          "event_id": 2932495,
+          "home": "FC KTP",
+          "away": "Haka",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.57,
+          "fair_prob": 0.5528,
           "drift": 0.0,
-          "match_time": "22:10",
-          "match_datetime": "2026-06-08T22:10+03:00"
+          "match_time": "18:30",
+          "match_datetime": "2026-06-08T18:30+03:00"
         }
       ]
     },
     {
       "rank": 5,
-      "combined_odd": 4.89,
-      "win_prob": 0.1928,
-      "expected_value": -0.058,
+      "combined_odd": 3.21,
+      "win_prob": 0.196,
+      "expected_value": -0.371,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -218,22 +218,22 @@
           "match_datetime": "2026-06-08T19:00+03:00"
         },
         {
-          "event_id": 2935306,
-          "home": "Fransa",
-          "away": "Kuzey İrlanda",
-          "outcome_key": "under",
-          "outcome_label": "ALT 2.5",
-          "odd": 2.39,
-          "fair_prob": 0.5438,
+          "event_id": 2932495,
+          "home": "FC KTP",
+          "away": "Haka",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.57,
+          "fair_prob": 0.5528,
           "drift": 0.0,
-          "match_time": "22:10",
-          "match_datetime": "2026-06-08T22:10+03:00"
+          "match_time": "18:30",
+          "match_datetime": "2026-06-08T18:30+03:00"
         }
       ]
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 13,
+    "total_prematch_runs": 14,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
