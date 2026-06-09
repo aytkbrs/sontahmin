@@ -1,13 +1,239 @@
 {
-  "generated_at": "2026-06-09T22:21:40+03:00",
-  "last_checked": "2026-06-09T22:21:40+03:00",
-  "date": "2026-06-09",
-  "run_id": 50,
-  "total_events": 207,
-  "events_with_stats": 149,
-  "coupons": [],
+  "generated_at": "2026-06-10T00:52:57+03:00",
+  "last_checked": "2026-06-10T00:52:57+03:00",
+  "date": "2026-06-10",
+  "run_id": 52,
+  "total_events": 204,
+  "events_with_stats": 147,
+  "coupons": [
+    {
+      "rank": 1,
+      "combined_odd": 3.0,
+      "win_prob": 0.3773,
+      "expected_value": 0.133,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2926714,
+          "home": "Kfa",
+          "away": "Fjölnir",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.44,
+          "fair_prob": 0.7545,
+          "drift": 0.0,
+          "match_time": "21:00",
+          "match_datetime": "2026-06-10T21:00+03:00"
+        },
+        {
+          "event_id": 2926833,
+          "home": "Canberra Olympic",
+          "away": "Canberra Juventus FC",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.5,
+          "fair_prob": 0.7391,
+          "drift": 0.0,
+          "match_time": "12:30",
+          "match_datetime": "2026-06-10T12:30+03:00"
+        },
+        {
+          "event_id": 2924743,
+          "home": "Ekvador (K)",
+          "away": "Arjantin (K)",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.39,
+          "fair_prob": 0.6767,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "combined_odd": 3.56,
+      "win_prob": 0.3735,
+      "expected_value": 0.331,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2926714,
+          "home": "Kfa",
+          "away": "Fjölnir",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.44,
+          "fair_prob": 0.7545,
+          "drift": 0.0,
+          "match_time": "21:00",
+          "match_datetime": "2026-06-10T21:00+03:00"
+        },
+        {
+          "event_id": 2926833,
+          "home": "Canberra Olympic",
+          "away": "Canberra Juventus FC",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.5,
+          "fair_prob": 0.7391,
+          "drift": 0.0,
+          "match_time": "12:30",
+          "match_datetime": "2026-06-10T12:30+03:00"
+        },
+        {
+          "event_id": 2924685,
+          "home": "Delaware FC",
+          "away": "West Chester United Usl2",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.65,
+          "fair_prob": 0.6698,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "combined_odd": 3.3,
+      "win_prob": 0.3419,
+      "expected_value": 0.129,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2926714,
+          "home": "Kfa",
+          "away": "Fjölnir",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.44,
+          "fair_prob": 0.7545,
+          "drift": 0.0,
+          "match_time": "21:00",
+          "match_datetime": "2026-06-10T21:00+03:00"
+        },
+        {
+          "event_id": 2924743,
+          "home": "Ekvador (K)",
+          "away": "Arjantin (K)",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.39,
+          "fair_prob": 0.6767,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        },
+        {
+          "event_id": 2924685,
+          "home": "Delaware FC",
+          "away": "West Chester United Usl2",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.65,
+          "fair_prob": 0.6698,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "combined_odd": 3.82,
+      "win_prob": 0.3399,
+      "expected_value": 0.299,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2926714,
+          "home": "Kfa",
+          "away": "Fjölnir",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.44,
+          "fair_prob": 0.7545,
+          "drift": 0.0,
+          "match_time": "21:00",
+          "match_datetime": "2026-06-10T21:00+03:00"
+        },
+        {
+          "event_id": 2926833,
+          "home": "Canberra Olympic",
+          "away": "Canberra Juventus FC",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.5,
+          "fair_prob": 0.7391,
+          "drift": 0.0,
+          "match_time": "12:30",
+          "match_datetime": "2026-06-10T12:30+03:00"
+        },
+        {
+          "event_id": 2924709,
+          "home": "Cleveland Force SC",
+          "away": "Akron City FC",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.77,
+          "fair_prob": 0.6096,
+          "drift": 0.0,
+          "match_time": "01:00",
+          "match_datetime": "2026-06-10T01:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "combined_odd": 3.44,
+      "win_prob": 0.335,
+      "expected_value": 0.152,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2926833,
+          "home": "Canberra Olympic",
+          "away": "Canberra Juventus FC",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.5,
+          "fair_prob": 0.7391,
+          "drift": 0.0,
+          "match_time": "12:30",
+          "match_datetime": "2026-06-10T12:30+03:00"
+        },
+        {
+          "event_id": 2924743,
+          "home": "Ekvador (K)",
+          "away": "Arjantin (K)",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.39,
+          "fair_prob": 0.6767,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        },
+        {
+          "event_id": 2924685,
+          "home": "Delaware FC",
+          "away": "West Chester United Usl2",
+          "outcome_key": "over",
+          "outcome_label": "ÜST 2.5",
+          "odd": 1.65,
+          "fair_prob": 0.6698,
+          "drift": 0.0,
+          "match_time": "02:00",
+          "match_datetime": "2026-06-10T02:00+03:00"
+        }
+      ]
+    }
+  ],
   "accumulation": {
-    "total_prematch_runs": 24,
+    "total_prematch_runs": 25,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
