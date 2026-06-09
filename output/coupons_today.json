@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-09T02:18:13+03:00",
-  "last_checked": "2026-06-09T02:18:13+03:00",
+  "generated_at": "2026-06-09T07:08:38+03:00",
+  "last_checked": "2026-06-09T07:08:38+03:00",
   "date": "2026-06-09",
-  "run_id": 40,
-  "total_events": 234,
-  "events_with_stats": 180,
+  "run_id": 42,
+  "total_events": 242,
+  "events_with_stats": 188,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 4.68,
+      "combined_odd": 4.81,
       "win_prob": 0.3029,
-      "expected_value": 0.417,
+      "expected_value": 0.455,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -43,7 +43,7 @@
           "away": "Çekya (K)",
           "outcome_key": "over",
           "outcome_label": "ÜST 2.5",
-          "odd": 1.86,
+          "odd": 1.91,
           "fair_prob": 0.6603,
           "drift": 0.0,
           "match_time": "20:00",
@@ -53,9 +53,9 @@
     },
     {
       "rank": 2,
-      "combined_odd": 4.65,
+      "combined_odd": 4.58,
       "win_prob": 0.2983,
-      "expected_value": 0.389,
+      "expected_value": 0.366,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -88,7 +88,7 @@
           "away": "Slovakya (K)",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.85,
+          "odd": 1.82,
           "fair_prob": 0.6503,
           "drift": 0.0,
           "match_time": "20:00",
@@ -98,9 +98,9 @@
     },
     {
       "rank": 3,
-      "combined_odd": 4.65,
+      "combined_odd": 4.73,
       "win_prob": 0.2933,
-      "expected_value": 0.365,
+      "expected_value": 0.387,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -133,7 +133,7 @@
           "away": "İsviçre (K)",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.85,
+          "odd": 1.88,
           "fair_prob": 0.6393,
           "drift": 0.0,
           "match_time": "20:00",
@@ -188,9 +188,9 @@
     },
     {
       "rank": 5,
-      "combined_odd": 6.23,
+      "combined_odd": 6.29,
       "win_prob": 0.2911,
-      "expected_value": 0.813,
+      "expected_value": 0.832,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -211,7 +211,7 @@
           "away": "Çekya (K)",
           "outcome_key": "over",
           "outcome_label": "ÜST 2.5",
-          "odd": 1.86,
+          "odd": 1.91,
           "fair_prob": 0.6603,
           "drift": 0.0,
           "match_time": "20:00",
@@ -223,7 +223,7 @@
           "away": "Slovakya (K)",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.85,
+          "odd": 1.82,
           "fair_prob": 0.6503,
           "drift": 0.0,
           "match_time": "20:00",
@@ -233,7 +233,7 @@
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 19,
+    "total_prematch_runs": 20,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
