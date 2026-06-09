@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-06-09T07:08:38+03:00",
-  "last_checked": "2026-06-09T07:08:38+03:00",
+  "generated_at": "2026-06-09T11:35:11+03:00",
+  "last_checked": "2026-06-09T11:35:11+03:00",
   "date": "2026-06-09",
-  "run_id": 42,
-  "total_events": 242,
-  "events_with_stats": 188,
+  "run_id": 44,
+  "total_events": 252,
+  "events_with_stats": 187,
   "coupons": [
     {
       "rank": 1,
-      "combined_odd": 4.81,
+      "combined_odd": 4.16,
       "win_prob": 0.3029,
-      "expected_value": 0.455,
+      "expected_value": 0.261,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -19,7 +19,7 @@
           "away": "HJK Helsinki",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.81,
+          "odd": 1.56,
           "fair_prob": 0.6779,
           "drift": 0.0,
           "match_time": "18:30",
@@ -43,7 +43,7 @@
           "away": "Çekya (K)",
           "outcome_key": "over",
           "outcome_label": "ÜST 2.5",
-          "odd": 1.91,
+          "odd": 1.92,
           "fair_prob": 0.6603,
           "drift": 0.0,
           "match_time": "20:00",
@@ -53,9 +53,9 @@
     },
     {
       "rank": 2,
-      "combined_odd": 4.58,
+      "combined_odd": 3.95,
       "win_prob": 0.2983,
-      "expected_value": 0.366,
+      "expected_value": 0.177,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -64,7 +64,7 @@
           "away": "HJK Helsinki",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.81,
+          "odd": 1.56,
           "fair_prob": 0.6779,
           "drift": 0.0,
           "match_time": "18:30",
@@ -98,9 +98,9 @@
     },
     {
       "rank": 3,
-      "combined_odd": 4.73,
-      "win_prob": 0.2933,
-      "expected_value": 0.387,
+      "combined_odd": 2.82,
+      "win_prob": 0.2962,
+      "expected_value": -0.165,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -109,7 +109,52 @@
           "away": "HJK Helsinki",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.81,
+          "odd": 1.56,
+          "fair_prob": 0.6779,
+          "drift": 0.0,
+          "match_time": "18:30",
+          "match_datetime": "2026-06-09T18:30+03:00"
+        },
+        {
+          "event_id": 2984865,
+          "home": "Etiyopya",
+          "away": "Malavi",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.39,
+          "fair_prob": 0.6767,
+          "drift": 0.0,
+          "match_time": "17:00",
+          "match_datetime": "2026-06-09T17:00+03:00"
+        },
+        {
+          "event_id": 2989837,
+          "home": "Mas Maghrib A Fes",
+          "away": "AS Far Rabat",
+          "outcome_key": "under",
+          "outcome_label": "ALT 2.5",
+          "odd": 1.3,
+          "fair_prob": 0.6458,
+          "drift": 0.0,
+          "match_time": "23:00",
+          "match_datetime": "2026-06-09T23:00+03:00"
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "combined_odd": 4.32,
+      "win_prob": 0.2933,
+      "expected_value": 0.266,
+      "drift_bonus": 0.0,
+      "legs": [
+        {
+          "event_id": 2989333,
+          "home": "FC Honka",
+          "away": "HJK Helsinki",
+          "outcome_key": "btts_yes",
+          "outcome_label": "KG VAR",
+          "odd": 1.56,
           "fair_prob": 0.6779,
           "drift": 0.0,
           "match_time": "18:30",
@@ -133,7 +178,7 @@
           "away": "İsviçre (K)",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.88,
+          "odd": 1.99,
           "fair_prob": 0.6393,
           "drift": 0.0,
           "match_time": "20:00",
@@ -142,10 +187,10 @@
       ]
     },
     {
-      "rank": 4,
-      "combined_odd": 4.96,
+      "rank": 5,
+      "combined_odd": 4.05,
       "win_prob": 0.2932,
-      "expected_value": 0.453,
+      "expected_value": 0.189,
       "drift_bonus": 0.0,
       "legs": [
         {
@@ -154,7 +199,7 @@
           "away": "HJK Helsinki",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.81,
+          "odd": 1.56,
           "fair_prob": 0.6779,
           "drift": 0.0,
           "match_time": "18:30",
@@ -178,53 +223,8 @@
           "away": "Bosna Hersek (K)",
           "outcome_key": "btts_yes",
           "outcome_label": "KG VAR",
-          "odd": 1.97,
+          "odd": 1.87,
           "fair_prob": 0.6391,
-          "drift": 0.0,
-          "match_time": "20:00",
-          "match_datetime": "2026-06-09T20:00+03:00"
-        }
-      ]
-    },
-    {
-      "rank": 5,
-      "combined_odd": 6.29,
-      "win_prob": 0.2911,
-      "expected_value": 0.832,
-      "drift_bonus": 0.0,
-      "legs": [
-        {
-          "event_id": 2989333,
-          "home": "FC Honka",
-          "away": "HJK Helsinki",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.81,
-          "fair_prob": 0.6779,
-          "drift": 0.0,
-          "match_time": "18:30",
-          "match_datetime": "2026-06-09T18:30+03:00"
-        },
-        {
-          "event_id": 2924702,
-          "home": "Galler (K)",
-          "away": "Çekya (K)",
-          "outcome_key": "over",
-          "outcome_label": "ÜST 2.5",
-          "odd": 1.91,
-          "fair_prob": 0.6603,
-          "drift": 0.0,
-          "match_time": "20:00",
-          "match_datetime": "2026-06-09T20:00+03:00"
-        },
-        {
-          "event_id": 2924725,
-          "home": "Letonya (K)",
-          "away": "Slovakya (K)",
-          "outcome_key": "btts_yes",
-          "outcome_label": "KG VAR",
-          "odd": 1.82,
-          "fair_prob": 0.6503,
           "drift": 0.0,
           "match_time": "20:00",
           "match_datetime": "2026-06-09T20:00+03:00"
@@ -233,7 +233,7 @@
     }
   ],
   "accumulation": {
-    "total_prematch_runs": 20,
+    "total_prematch_runs": 21,
     "total_result_labels": 0,
     "total_training_rows": 0,
     "pinnacle_covered_today": 0,
